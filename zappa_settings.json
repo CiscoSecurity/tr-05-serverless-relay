@@ -7,8 +7,8 @@
         "log_level": "INFO",
         "manage_roles": false,
         "profile_name": "serverless",
-        "project_name": "tr-skeleton-relay",
+        "project_name": "tr-template-relay",
         "runtime": "python3.7",
-        "s3_bucket": "zappa-tr-skeleton-relay"
+        "s3_bucket": "zappa-tr-template-relay"
     }
 }

@@ -22,7 +22,9 @@ def handle_error(exception):
         exception.__class__.__module__,
         exception.__class__.__name__,
     ])
-    return jsonify(code=code, message=message, reason=reason), code
+
+    response = jsonify(code=code, message=message, reason=reason)
+    return response, code
 
 
 if __name__ == '__main__':

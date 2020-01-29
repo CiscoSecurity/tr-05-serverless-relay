@@ -1,3 +1,6 @@
 Flask==1.1.1
 httpie==2.0.0
+marshmallow==3.3.0
+Werkzeug==0.16.1
 zappa==0.48.2
+git+ssh://git@github.com/threatgrid/tr-lambda-relay.git  # latest
