@@ -1,0 +1,14 @@
+{
+    "dev": {
+        "app_function": "app.app",
+        "aws_region": "eu-central-1",
+        "exclude": [".*", "*.json", "*.md", "*.txt"],
+        "keep_warm": false,
+        "log_level": "INFO",
+        "manage_roles": false,
+        "profile_name": "serverless",
+        "project_name": "tr-skeleton-relay",
+        "runtime": "python3.7",
+        "s3_bucket": "zappa-tr-skeleton-relay"
+    }
+}
