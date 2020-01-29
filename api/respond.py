@@ -14,11 +14,11 @@ get_action_form_params = partial(get_json, schema=ActionFormParamsSchema())
 
 @respond_api.route('/respond/observables', methods=['POST'])
 def respond_observables():
-    get_observables()
+    _ = get_observables()
     return jsonify_data([])
 
 
 @respond_api.route('/respond/trigger', methods=['POST'])
 def respond_trigger():
-    get_action_form_params()
+    _ = get_action_form_params()
     return jsonify_data({'status': 'success'})
