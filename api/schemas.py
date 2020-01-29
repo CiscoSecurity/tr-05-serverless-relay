@@ -55,7 +55,7 @@ class ObservableSchema(Schema):
     )
 
 
-class ActionSchema(Schema):
+class ActionFormParamsSchema(Schema):
     action_id = fields.String(
         data_key='action-id',
         validate=validate_string,
