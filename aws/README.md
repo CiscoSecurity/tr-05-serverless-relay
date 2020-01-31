@@ -10,8 +10,9 @@ your AWS credentials file (check the
 [official documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
 for more details on how to configure multiple AWS profiles).
 
-Thus you have to create an IAM User with the name `serverless` first (see the
-[configuration file](../zappa_settings.json) for Zappa).
+Thus in order to get started, you have to create an IAM User with the name
+`serverless` (see the Zappa
+[configuration file](../zappa_settings.json)).
 
 By default, Zappa just assumes that the user already has all the necessary
 permissions before deploying or running any other command. On the other hand,
@@ -37,7 +38,7 @@ the `Create policy` button.
 9. Click the `Add permissions` button.
 10. Select the `Attach existing policies directly` tab.
 11. Search for the `ZappaLambdaDeploymentPolicy` policy and enable it via the
-corresponding checkbox.
+corresponding check-box.
 12. Click the `Next: Review` button and then the `Add permissions` button.
 
 Though the described setup has to be done manually, the good thing is that it
@@ -84,7 +85,7 @@ the `Create policy` button.
 9. Select the `AWS service` tab and choose the `Lambda` service.
 10. Click the `Next: Permissions` button.
 11. Search for the `ZappaLambdaExecutionPolicy` policy and enable it via the
-corresponding checkbox.
+corresponding check-box.
 12. Click the `Next: Tags` button and then the `Next: Review` button.
 13. Give your role the name `<project_name>-<stage>-ZappaLambdaExecutionRole`
 and click the `Create role` button.
@@ -132,3 +133,40 @@ After:
 Though the described setup has to be done manually, the good thing is that it
 has to be done only once per each particular role/deployment (the steps 1-6
 can be skipped if the `ZappaLambdaExecutionPolicy` policy already exist).
+
+## Setting Environment Variables
+
+Unfortunately, Zappa does not have a good way to pass environment variables to
+your Lambdas. Of course, the `aws_environment_variables` setting allows us to
+use native AWS Lambda environment variables. These are useful as you can easily
+change them via the AWS Lambda console at run-time. They are also useful for
+storing sensitive credentials and to take advantage of KMS encryption of
+environment variables.
+
+The main problem with `aws_environment_variables` is that environment variables
+have to be hard-coded into the configuration file, and this is not acceptable.
+
+Example:
+```json
+{
+    "dev": {
+        "aws_environment_variables": {
+            "key": "value"
+        }
+    }
+}
+```
+
+So a better solution is to set environment variables via the AWS Lambda console
+directly. The process itself is quite easy and can be done by going through the
+following steps:
+
+1. Go to the `AWS Lambda` console.
+2. Select the `Functions` tab.
+3. Find your Lambda and go to the corresponding configuration page.
+4. Set your key-value pairs in the `Environment variables` section.
+5. Click the `Save` button.
+
+Though the described setup has to be done manually, the good thing is that it
+has to be done only once per each particular deployment, and the values can be
+dynamically changed at run-time without having to re-deploy anything.
