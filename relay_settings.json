@@ -2,7 +2,7 @@
   "tags": [
     "default"
   ],
-  "name": "${NAME}",
+  "name": "Template",
   "record": "relay-module.module/RelayModule+Custom+CS",
   "config": {
     "url": "${URL}",
