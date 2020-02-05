@@ -28,10 +28,12 @@ def test_respond_call_with_invalid_jwt_failure(route, client, invalid_jwt):
 @fixture(scope='module')
 def invalid_json(route):
     if route.endswith('/observables'):
-        return [{'type': 'unknown'}]
+        return [{'type': 'unknown', 'value': ''}]
 
     if route.endswith('/trigger'):
-        return {'action_id': 'invalid_action_id', 'observable_type': 'unknown'}
+        return {'action_id': 'invalid_action_id',
+                'observable_type': 'unknown',
+                'observable_value': None}
 
 
 def test_respond_call_with_valid_jwt_but_invalid_json_failure(route,
