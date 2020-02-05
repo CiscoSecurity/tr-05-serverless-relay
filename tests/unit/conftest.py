@@ -8,7 +8,7 @@ from app import app
 
 @fixture(scope='session')
 def secret_key():
-    # Generate some string based on the current date & time.
+    # Generate some string based on the current datetime.
     return datetime.utcnow().isoformat()
 
 
@@ -26,13 +26,28 @@ def client(secret_key):
 def valid_jwt(secret_key):
     header = {'alg': 'HS256'}
 
-    payload = {'username': 'gdavoian'}
+    payload = {'username': 'gdavoian', 'superuser': False}
 
     return jwt.encode(header, payload, secret_key).decode('ascii')
 
 
 @fixture(scope='session')
-def invalid_jwt(valid_jwt):
-    # Corrupt the JWT by reversing its signature.
+def invalid_jwt(valid_jwt, secret_key):
     header, payload, signature = valid_jwt.split('.')
-    return header + '.' + payload + '.' + signature[::-1]
+
+    def jwt_decode(s: str) -> dict:
+        from authlib.common.encoding import urlsafe_b64decode, json_loads
+        return json_loads(urlsafe_b64decode(s.encode('ascii')))
+
+    def jwt_encode(d: dict) -> str:
+        from authlib.common.encoding import json_dumps, urlsafe_b64encode
+        return urlsafe_b64encode(json_dumps(d).encode('ascii')).decode('ascii')
+
+    payload = jwt_decode(payload)
+
+    # Corrupt the valid JWT by tampering with its payload.
+    payload['superuser'] = True
+
+    payload = jwt_encode(payload)
+
+    return '.'.join([header, payload, signature])
