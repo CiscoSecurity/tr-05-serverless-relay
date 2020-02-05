@@ -21,12 +21,13 @@ def calls():
     yield Call('GET', '/respond/trigger', HTTPStatus.METHOD_NOT_ALLOWED)
 
 
-@fixture(scope='module', params=calls(),
+@fixture(scope='module',
+         params=calls(),
          ids=lambda call: f'{call.method} {call.route}')
 def call(request):
     return request.param
 
 
-def test_non_relay_call_fails(call, client):
+def test_non_relay_call_failure(call, client):
     response = client.open(call.route, method=call.method)
     assert response.status_code == call.expected_status_code
