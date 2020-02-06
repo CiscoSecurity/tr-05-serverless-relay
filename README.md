@@ -22,7 +22,20 @@ be pushed to Threat Response as a Relay Module using the
 pip install -U -r requirements.txt
 ```
 
+## Testing
+
+```bash
+pip install -U -r test-requirements.txt
+```
+
+- Check for *PEP 8* compliance: `flake8 .`.
+- Run the suite of unit tests: `pytest -v tests/unit/`.
+
 ## Deployment
+
+```bash
+pip install -U -r deploy-requirements.txt
+```
 
 As an AWS Lambda Function:
 - Deploy: `zappa deploy dev`.
@@ -44,6 +57,10 @@ variables from a `.env` file (i.e.`TR_API_CLIENT_ID`, `TR_API_CLIENT_PASSWORD`,
 `URL`, `JWT`) and pass them to the corresponding command.
 
 ## Usage
+
+```bash
+pip install -U -r use-requirements.txt
+```
 
 ```bash
 export URL=<...>
