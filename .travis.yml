@@ -3,6 +3,8 @@ language: python
 python:
 - '3.7'
 install:
+- pip install -U -r requirements.txt
 - pip install -U -r test-requirements.txt
 script:
 - flake8 .
+- pytest -v tests/unit/
