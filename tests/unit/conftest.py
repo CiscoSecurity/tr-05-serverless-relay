@@ -23,16 +23,18 @@ def client(secret_key):
 
 
 @fixture(scope='session')
-def valid_jwt(secret_key):
+def valid_jwt(client):
     header = {'alg': 'HS256'}
 
     payload = {'username': 'gdavoian', 'superuser': False}
+
+    secret_key = client.application.secret_key
 
     return jwt.encode(header, payload, secret_key).decode('ascii')
 
 
 @fixture(scope='session')
-def invalid_jwt(valid_jwt, secret_key):
+def invalid_jwt(valid_jwt):
     header, payload, signature = valid_jwt.split('.')
 
     def jwt_decode(s: str) -> dict:
