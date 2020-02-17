@@ -16,11 +16,6 @@ def route(request):
     return request.param
 
 
-def test_enrich_call_without_jwt_failure(route, client):
-    response = client.post(route)
-    assert response.status_code == HTTPStatus.FORBIDDEN
-
-
 def test_enrich_call_with_invalid_jwt_failure(route, client, invalid_jwt):
     response = client.post(route, headers=headers(invalid_jwt))
     assert response.status_code == HTTPStatus.FORBIDDEN
