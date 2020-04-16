@@ -58,9 +58,9 @@ deployments. Instead, you will probably want to manually manage your IAM
 policies.
 
 That is why the `manage_roles` setting is set to `false` in the Zappa
-[configuration file](../zappa_settings.json). This makes Zappa look for an IAM
-role with the following name:
-`<project_name>-<stage>-ZappaLambdaExecutionRole`.
+[configuration file](../zappa_settings.json). Also, notice the `role_name`
+setting, it makes Zappa look for an IAM role with the following name:
+`tr-serverless-relay-ZappaLambdaExecutionRole`.
 The role will be automatically attached to your Lambda by Zappa.
 
 **Note.** After having properly configured your `serverless` user, Zappa must
@@ -70,8 +70,7 @@ We have already compiled the
 [policy file](ZappaLambdaExecutionPolicy.json) with a much smaller set of
 permissions intended exactly for our particular use case (i.e. implementation
 of Threat Response Serverless Relay APIs). You just have to create an AIM role
-per each deployment (i.e. a unique `profile_name` + `stage` combination) and
-attach this policy to the role by going through the following steps:
+and attach this policy to the role by going through the following steps:
 
 1. Go to the `Identity and Access Management (IAM)` console.
 2. Select the `Policies` tab under the `Access management` drop-down list.
@@ -87,7 +86,7 @@ the `Create policy` button.
 11. Search for the `ZappaLambdaExecutionPolicy` policy and enable it via the
 corresponding check-box.
 12. Click the `Next: Tags` button and then the `Next: Review` button.
-13. Give your role the name `<project_name>-<stage>-ZappaLambdaExecutionRole`
+13. Give your role the name `tr-serverless-relay-ZappaLambdaExecutionRole`
 and click the `Create role` button.
 14. Find the newly created role and go to the corresponding configuration page.
 15. Select the `Trust relationships` tab.
@@ -131,8 +130,9 @@ After:
 ```
 
 Though the described setup has to be done manually, the good thing is that it
-has to be done only once per each particular role/deployment (the steps 1-6
-can be skipped if the `ZappaLambdaExecutionPolicy` policy already exist).
+has to be done only once (all the steps can be skipped if both the
+`ZappaLambdaExecutionPolicy` policy and the
+`tr-serverless-relay-ZappaLambdaExecutionRole` role already exist).
 
 ## Setting Environment Variables
 
