@@ -4,15 +4,70 @@
 
 ### Custom AWS IAM Users and Policies for Deployment
 
-You can specify which *local* profile to use for deploying your Zappa application
-by defining the `profile_name` setting, which will correspond to a profile in
-your AWS credentials file (check the
-[official documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html)
-for more details on how to configure multiple AWS profiles).
+#### Sample AWS IAM User for Deployment (`serverless`)
 
-Thus in order to get started, you have to create an IAM User with the name
-`serverless` (see the Zappa
-[configuration file](../zappa_settings.json)).
+To get started, you have to create an IAM user with the name `serverless` by
+going through the following steps:
+
+1. Go to the `Identity and Access Management (IAM)` console.
+2. Select the `Users` tab under the `Access management` drop-down list.
+3. Click the `Add user` button.
+4. Give your user the name `serverless` and enable `Programmatic access` via
+the corresponding check-box. Click the `Next: Permissions` button.
+5. Click the `Next: Tags` button and then the `Next: Review` button.
+6. Click the `Create user` button. You might see a warning that the user has no
+permissions at the moment. Just ignore it, we will fix it soon.
+7. Click the `Download .csv` button. Note that this is the last time these
+credentials will be available to download, so make sure to store them somewhere.
+Rename the file to `serverless.csv` so that we can refer to it later on.
+
+Once the user is created and the credentials are downloaded, the best way to
+store that data is to put it into your AWS `credentials` file usually located
+on `~/.aws/credentials` (Linux and Mac) or `%USERPROFILE%\.aws\credentials`
+(Windows). So make sure to add the user's credentials from the `serverless.csv`
+file to the AWS `credentials` file (manually create an empty one if missing)
+as a separate profile:
+```
+[serverless]
+aws_access_key_id=<AWS_ACCESS_KEY_ID>
+aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
+```
+
+**Note.** Throughout this document everything between a pair of angle brackets
+`<...>` (including the brackets themselves!) is considered a placeholder for
+your actual credentials. So please pay attention to this fact and be careful of
+simply copying and pasting without filling any gaps.
+
+Each profile can also specify different AWS regions and output formats in the
+AWS `config` file usually located on `~/.aws/config` (Linux and Mac) or
+`%USERPROFILE%\.aws\config` (Windows). So make sure to also add the following
+lines to your AWS `config` file:
+```
+[profile serverless]
+region=<REGION>
+output=json
+```
+
+**Note.** The profile name in the AWS `config` file must include the `"profile"`
+prefix but still match the profile name in the AWS `credentials` file. Compare:
+`[profile serverless]` vs `[serverless]`.
+
+**Note.** Your AWS region should be geographically as close to your CTR region
+as possible to reduce latency as much as possible.
+
+Finally, you have to specify which AWS profile to use for deploying your Zappa
+application by defining the `profile_name` setting in the
+[Zappa Settings](../zappa_settings.json).
+
+**Note.** In the [Zappa Settings](../zappa_settings.json) the value of the
+`profile_name` setting must correspond to the profile name in the AWS
+`credentials` file. Compare: `"profile_name": "serverless"` vs `[serverless]`.
+
+**Note.** In the [Zappa Settings](../zappa_settings.json) the value of the
+`aws_region` setting must correspond to the region name for the `serverless`
+profile in the AWS `config` file.
+
+#### Sample AWS IAM Policy for Deployment (`ZappaLambdaDeploymentPolicy`)
 
 By default, Zappa just assumes that the user already has all the necessary
 permissions before deploying or running any other command. On the other hand,
@@ -21,15 +76,56 @@ it is not always possible (and is not a good idea either according to the
 to simply work on behalf of a user with administrator access to any resource.
 
 So a better solution is to grant your user a more granular (ideally minimum)
-set of permissions. We have already compiled the
-[policy file](ZappaLambdaDeploymentPolicy.json) to simplify things. You just
-have to attach this policy to your user by going through the following steps:
+set of permissions. To achieve that, we have already compiled the necessary
+[Deployment Policy](ZappaLambdaDeploymentPolicy.json) for you to simplify
+things. Basically, it is just a JSON document in a special format that AWS can
+understand and work with. You are encouraged to check the document's contents
+before we move on.
 
+**Note.** Make sure to replace `<ACCOUNT_ID>` by the actual ID of your AWS
+account. An AWS account ID is a 12-digit number, such as 123456789012, and there
+are several places in the `AWS Management Console` where it can be found. E.g,
+you may go to the [Support Center](https://console.aws.amazon.com/support/home)
+and look for something like `Account number: 123456789012` in the upper left
+corner of the page.
+
+Before:
+```json
+...
+"Resource": [
+    "arn:aws:iam::<ACCOUNT_ID>:role/*-ZappaLambdaExecutionRole"
+]
+...
+```
+
+After:
+```json
+...
+"Resource": [
+    "arn:aws:iam::123456789012:role/*-ZappaLambdaExecutionRole"
+]
+...
+```
+
+**Note.** You might have noticed the lines like `"arn:aws:s3:::zappa-*"` or
+`"arn:aws:s3:::zappa-*/*"`. What Zappa does under the hood when deploying an
+application is that it automatically packages up the application and its local
+virtual environment into a Lambda-compatible archive, uploads the archive to S3
+and temporary stores it in an S3 bucket, keeps provisioning the other resources,
+and then deletes the archive from the S3 bucket. So that is why your user must
+have almost full access to S3 buckets starting with the `zappa-` prefix. Thus,
+make sure that in the [Zappa Settings](../zappa_settings.json) the value of the
+`s3_bucket` setting starts with the `zappa-` prefix. Also, make sure that the
+bucket name is globally unique (e.g. by adding some random suffix to the end)
+because the namespace of S3 is shared between all AWS accounts.
+
+To attach the corrected [Deployment Policy](ZappaLambdaDeploymentPolicy.json)
+to your `serverless` user, you have to go through the following steps:
 1. Go to the `Identity and Access Management (IAM)` console.
 2. Select the `Policies` tab under the `Access management` drop-down list.
 3. Click the `Create policy` button.
-4. Select the `JSON` tab. Copy and paste the JSON contents of the policy file.
-Make sure to replace `<ACCOUNT_ID>` by the actual ID of your AWS account.
+4. Select the `JSON` tab. Copy and paste the JSON contents of the
+[Deployment Policy](ZappaLambdaDeploymentPolicy.json).
 5. Click the `Review policy` button.
 6. Give your policy the name `ZappaLambdaDeploymentPolicy` and click
 the `Create policy` button.
@@ -41,13 +137,11 @@ the `Create policy` button.
 corresponding check-box.
 12. Click the `Next: Review` button and then the `Add permissions` button.
 
-Though the described setup has to be done manually, the good thing is that it
-has to be done only once per each particular `serverless` user (the steps 1-6
-can be skipped if the `ZappaLambdaDeploymentPolicy` policy already exist).
-
 ### Custom AWS IAM Roles and Policies for Execution
 
-The default IAM policy created by Zappa for executing the Lambda is very
+#### Sample AWS IAM Role for Execution (`tr-serverless-relay-ZappaLambdaExecutionRole`)
+
+The default IAM policy created by Zappa for executing Lambdas is very
 permissive. It grants access to all actions for all resources for types
 CloudWatch, S3, Kinesis, SNS, SQS, DynamoDB, and Route53; lambda:InvokeFunction
 for all Lambda resources; Put to all X-Ray resources; and all Network Interface
@@ -57,21 +151,29 @@ permissions for most continuous integration pipelines or production
 deployments. Instead, you will probably want to manually manage your IAM
 policies.
 
-That is why the `manage_roles` setting is set to `false` in the Zappa
-[configuration file](../zappa_settings.json). Also, notice the `role_name`
-setting, it makes Zappa look for an IAM role with the following name:
-`tr-serverless-relay-ZappaLambdaExecutionRole`.
-The role will be automatically attached to your Lambda by Zappa.
+That is why in the [Zappa Settings](../zappa_settings.json) the `manage_roles`
+setting is set to `false`. Also, notice the `role_name` setting, it makes Zappa
+look for a custom IAM role named `tr-serverless-relay-ZappaLambdaExecutionRole`.
+The role will be automatically attached to your Lambda by Zappa. Moreover, once
+you have created the role, you will be able to re-use it for any future Lambdas.
 
 **Note.** After having properly configured your `serverless` user, Zappa must
-be able to attach such roles to any of your Lambdas on behalf of `serverless`.
+be able to attach such roles (i.e. with the `-ZappaLambdaExecutionRole` suffix)
+to any of your Lambdas on behalf of `serverless`. Again, you may check the
+[Deployment Policy](ZappaLambdaDeploymentPolicy.json) one more time to figure
+out where that permission comes from. Hint: remember the line where you must
+have already substituted some placeholder with your AWS account ID.
 
-We have already compiled the
-[policy file](ZappaLambdaExecutionPolicy.json) with a much smaller set of
-permissions intended exactly for our particular use case (i.e. implementation
-of Threat Response Serverless Relay APIs). You just have to create an AIM role
-and attach this policy to the role by going through the following steps:
+#### Sample AWS IAM Policy for Execution (`ZappaLambdaExecutionPolicy`)
 
+We have already compiled the [Execution Policy](ZappaLambdaExecutionPolicy.json)
+for your with a much smaller set of permissions intended exactly for our
+particular use case (i.e. implementation of Serverless Relays). It is still a
+JSON document in the format you should already be familiar with.
+
+To create your `tr-serverless-relay-ZappaLambdaExecutionRole` role and attach
+the [Execution Policy](ZappaLambdaExecutionPolicy.json) to it, you have to go
+through the following steps:
 1. Go to the `Identity and Access Management (IAM)` console.
 2. Select the `Policies` tab under the `Access management` drop-down list.
 3. Click the `Create policy` button.
@@ -128,45 +230,3 @@ After:
   ]
 }
 ```
-
-Though the described setup has to be done manually, the good thing is that it
-has to be done only once (all the steps can be skipped if both the
-`ZappaLambdaExecutionPolicy` policy and the
-`tr-serverless-relay-ZappaLambdaExecutionRole` role already exist).
-
-## Setting Environment Variables
-
-Unfortunately, Zappa does not have a good way to pass environment variables to
-your Lambdas. Of course, the `aws_environment_variables` setting allows us to
-use native AWS Lambda environment variables. These are useful as you can easily
-change them via the AWS Lambda console at run-time. They are also useful for
-storing sensitive credentials and to take advantage of KMS encryption of
-environment variables.
-
-The main problem with `aws_environment_variables` is that environment variables
-have to be hard-coded into the configuration file, and this is not acceptable.
-
-Example:
-```json
-{
-    "dev": {
-        "aws_environment_variables": {
-            "key": "value"
-        }
-    }
-}
-```
-
-So a better solution is to set environment variables via the AWS Lambda console
-directly. The process itself is quite easy and can be done by going through the
-following steps:
-
-1. Go to the `AWS Lambda` console.
-2. Select the `Functions` tab.
-3. Find your Lambda and go to the corresponding configuration page.
-4. Set your key-value pairs in the `Environment variables` section.
-5. Click the `Save` button.
-
-Though the described setup has to be done manually, the good thing is that it
-has to be done only once per each particular deployment, and the values can be
-dynamically changed at run-time without having to re-deploy anything.
