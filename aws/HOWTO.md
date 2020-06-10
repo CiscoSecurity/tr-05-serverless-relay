@@ -1,5 +1,9 @@
 # AWS HOWTO
 
+**Note.** This document is intended for the initial AWS setup. If you have not
+configured your AWS environment yet, then make sure to do that first by
+thoroughly carrying out any instructions from this document.
+
 ## Using Custom AWS IAM Users, Roles, Policies
 
 ### Custom AWS IAM Users and Policies for Deployment
