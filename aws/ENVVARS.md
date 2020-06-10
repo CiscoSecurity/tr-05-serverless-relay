@@ -1,8 +1,10 @@
 # AWS Environment Variables
 
-**Note.** Feel free to skip this document until you have deployed your Lambda.
-But once your Lambda has been successfully deployed, make sure to return back
-to this document for some extra configuration tweaks.
+**Note.** Feel free to skip this document until you have deployed your Lambda
+(check the [AWS HOWTO](HOWTO.md) document for more details on how to properly
+set up your AWS environment first). But once your Lambda has been successfully
+deployed, make sure to return back to this document for some extra configuration
+tweaks.
 
 Unfortunately, Zappa does not have a good way to pass environment variables to
 your Lambdas. Of course, the `aws_environment_variables` setting allows us to

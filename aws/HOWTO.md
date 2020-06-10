@@ -234,3 +234,28 @@ After:
   ]
 }
 ```
+
+## Extra Notes on Zappa Settings
+
+In the previous section, we have covered the required AWS setup also explaining
+how to properly configure some of the most important Zappa settings along the
+way. In this section, we will explain the rest of them. Any setting not covered
+here is assumed to have an already reasonable default value and thus may be
+simply left as-is.
+
+- `stage`. A logical group of settings representing a separate environment.
+This is not an actual setting. Instead, this is the way individual settings are
+grouped by different environments in the [Zappa Settings](../zappa_settings.json).
+You may define as many stages as you like - we recommend having at least the
+`dev` stage (the default one).
+
+- `project_name`. The name of the project as it appears on AWS.
+The concatenation of `project_name` and `stage` (e.g. `tr-serverless-relay-dev`)
+and its derivatives serve as unique identifiers for any groups of resources in
+different AWS services related to the same Lambda. Unlike `s3_bucket`,
+`project_name` does not have to be globally unique, it just has to be unique
+within `aws_region` of your AWS account.
+
+- `runtime`. The Python version used for running the Lambda.
+Our Lambdas have been implemented and tested using `python3.7`. You may try to
+use any higher versions if you wish as they should be backward-compatible.
