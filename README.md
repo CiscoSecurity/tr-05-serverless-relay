@@ -16,9 +16,10 @@ easily packaged and deployed as an AWS Lambda Function using
 
 ## Rationale
 
-1. We need an application that will translate API requests from CTR to the
-third-party integration, and vice versa. This application is provided here in
-the GitHub repository, and we are going to install it in AWS Lambda using Zappa.
+1. We need an application that will translate API requests from Threat Response
+to the third-party integration, and vice versa. This application is provided
+here in the GitHub repository, and we are going to install it in AWS Lambda
+using Zappa.
 
 2. AWS Lambda allows us to deploy our application without deploying a dedicated
 server or paying for so called "idle" cycles. AWS handles instantiation and
@@ -33,7 +34,7 @@ will explain how to customize it during this process.
 ## Preparation
 
 To get started, you have to configure your AWS environment and encode your
-third-party credentials into a JWT token using some generated secret key.
+third-party credentials into a JWT using a generated secret key.
 
 ### AWS
 
@@ -45,23 +46,24 @@ the values there and your AWS setup.
 
 ### JWT
 
-In brief, JWT is a way of encoding any JSON data into a signed token. The
-signature ensures the integrity of the data, i.e. the fact that it has not been
-changed in any way in transit between the sender and the recipient.
+In brief, [JSON Web Token (JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token)
+is a way of encoding any JSON data into a signed token. The signature ensures
+the integrity of the data, i.e. the fact that it has not been changed in any
+way in transit between the sender and the recipient.
 
 The JWT standard supports many different algorithms for signing tokens but we
 are interested in HS256. The algorithm requires to generate (and securely store
 somewhere) a 256-bit (i.e. 64-character) string a.k.a. the secret key.
 
 Once a secret key has been generated and used for encoding your third-party
-credentials into a JWT token, the token has to be provided on each request to
-the application as the `Authorization: Bearer <JWT>` header (this will be
-automatically done for you if you create a corresponding module in CTR). Unless
-the signature verification fails, the application will decode the token to
-restore your original third-party credentials and will try to authenticate to
-the corresponding third-party service on your behalf.
+credentials into a JWT, the token has to be provided on each request to the
+application as the `Authorization: Bearer <JWT>` header (this will be
+automatically done for you if you create a corresponding module in Threat
+Response). Unless the signature verification fails, the application will decode
+the token to restore your original third-party credentials and will try to
+authenticate to the corresponding third-party service on your behalf.
 
-Probably, the easiest way to generate your JWT token is to use the interactive
+Probably, the easiest way to generate your JWT is to use the interactive
 Debugger located on [JWT.IO](https://jwt.io/). You just have to go through the
 following steps:
 
@@ -89,7 +91,7 @@ example of how it may look like:
 3. In the Verify Signature section of the Decoded pane replace the
 `your-256-bit-secret` placeholder with your actual secret key.
 
-4. Your JWT token must already be in the Encoded pane. It is ready to use!
+4. Your JWT must already be in the Encoded pane. It is ready to use!
 
 Do not worry, the tool does not record your data, everything is done on the
 client side.
@@ -101,7 +103,7 @@ them later on. Let us name those as `SECRET_KEY` and `JWT` respectively.
 
 First of all, make sure that you already have Python 3 installed by typing
 ```
-python3 -V
+python3 --version
 ```
 in your command-line shell.
 
@@ -122,7 +124,7 @@ system. Here are the steps to follow:
 
 3. Upgrade PIP (optional):
 
-   `python -m pip install -U pip`
+   `python -m pip install --upgrade pip`
 
 **NOTE**. The virtual environment has to be created only once, you just have
 to make sure to activate it each time you are working on or playing with the
@@ -134,9 +136,16 @@ Finally, install the libraries required for the application to function from
 the [requirements.txt](requirements.txt) file:
 
 ```
-python -m pip install -U -r requirements.txt
+python -m pip install --upgrade --requirement requirements.txt
 ```
 
 ## Deployment
+
+Besides the application's requirements, you also have to install a couple of
+extra tools from the [deploy-requirements.txt](deploy-requirements.txt) for
+actually deploying the application:
+```
+python -m pip install --upgrade --requirement deploy-requirements.txt --upgrade-strategy eager
+```
 
 TBD...

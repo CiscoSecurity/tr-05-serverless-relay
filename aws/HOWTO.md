@@ -2,7 +2,8 @@
 
 **NOTE.** This document is intended for the initial AWS setup. If you have not
 configured your AWS environment yet, then make sure to do that first by
-thoroughly carrying out any instructions from this document.
+thoroughly carrying out any instructions from this document. This setup only
+needs to be done one time in your AWS environment.
 
 ## Using Custom AWS IAM Users, Roles, Policies
 
@@ -56,8 +57,9 @@ output=json
 prefix but still match the profile name in the AWS `credentials` file. Compare:
 `[profile serverless]` vs `[serverless]`.
 
-**NOTE.** Your AWS region should be geographically as close to your CTR region
-as possible to reduce latency as much as possible.
+**NOTE.** Your AWS region should be geographically as close to your Threat
+Response region as possible to reduce latency as much as possible. The
+recommended AWS regions are: `us-east-1`, `eu-west-1`, `ap-northeast-1`.
 
 Finally, you have to specify which AWS profile to use for deploying your Zappa
 application by defining the `profile_name` setting in the
@@ -198,7 +200,7 @@ and click the `Create role` button.
 14. Find the newly created role and go to the corresponding configuration page.
 15. Select the `Trust relationships` tab.
 16. Click the `Edit trust relationship` button.
-17. The `Service` field must be equal to `lambda.amazonaws.com` for now.
+17. By default, the `Service` field will be equal to `lambda.amazonaws.com`.
 Convert the value to a list and add `apigateway.amazonaws.com` to it.
 
 Before:
