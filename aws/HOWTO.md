@@ -258,5 +258,5 @@ different AWS services related to the same Lambda. Unlike `s3_bucket`,
 within `aws_region` of your AWS account.
 
 - `runtime`. The Python version used for running the Lambda.
-Our Lambdas have been implemented and tested using `python3.7`. You may try to
+The Lambda has been implemented and tested using `python3.7`. You may try to
 use any higher versions if you wish as they should be backward-compatible.
