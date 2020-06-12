@@ -142,10 +142,49 @@ python -m pip install --upgrade --requirement requirements.txt
 ## Deployment
 
 Besides the application's requirements, you also have to install a couple of
-extra tools from the [deploy-requirements.txt](deploy-requirements.txt) for
-actually deploying the application:
+extra tools from the [deploy-requirements.txt](deploy-requirements.txt) file
+for actually deploying the application:
 ```
 python -m pip install --upgrade --requirement deploy-requirements.txt --upgrade-strategy eager
+```
+
+To `deploy` your application to AWS as a Lambda function for the first time,
+run the following command:
+```
+zappa deploy dev
+```
+
+**NOTE**. Here `dev` is just the name of the default stage. You may define as
+many stages as you like. Each Zappa command requires a stage to be specified so
+make sure to replace `dev` with the name of your stage.
+
+**NOTE**. If you are experiencing any problems with running the command then
+check the [AWS ERRORS](aws/ERRORS.md) for the troubleshooting of some most
+common types of errors.
+
+You can always check the `status` of your deployment with the corresponding
+command:
+```
+zappa status dev
+```
+
+Once the Lambda has been deployed, make sure to set the `SECRET_KEY`
+environment variable introduced in the [JWT](#JWT) section. This is important
+since the Lambda has to know the `SECRET_KEY` so that it can verify and decode
+the `JWT` from incoming requests. Check the [AWS ENVVARS](aws/ENVVARS.md)
+dedicated to passing environment variables to Lambdas.
+
+Notice that you have to `deploy` your Lambda only once. Each time you make
+changes to the source code or to the settings file you just have to `update`
+the Lambda by running the following command:
+```
+zappa update dev
+```
+
+As a bonus, you can also monitor your Lambda's HTTP traffic in near real-time
+with the `tail` command:
+```
+zappa tail dev --http
 ```
 
 TBD...
