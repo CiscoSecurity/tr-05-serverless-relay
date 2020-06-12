@@ -1,10 +1,8 @@
 {
-  "tags": [
-    "default"
-  ],
   "name": "Template",
-  "record": "relay-module.module/RelayModule+Custom+CS",
-  "config": {
+  "module_type_id": "a14ae422-01b6-5013-9876-695ff1b0ebe0",
+  "visibility": "org",
+  "settings": {
     "url": "${URL}",
     "auth-type": "authorization-header",
     "authorization-header": "Bearer ${JWT}",
