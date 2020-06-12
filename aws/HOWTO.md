@@ -1,6 +1,6 @@
 # AWS HOWTO
 
-**Note.** This document is intended for the initial AWS setup. If you have not
+**NOTE.** This document is intended for the initial AWS setup. If you have not
 configured your AWS environment yet, then make sure to do that first by
 thoroughly carrying out any instructions from this document.
 
@@ -21,7 +21,7 @@ the corresponding check-box. Click the `Next: Permissions` button.
 5. Click the `Next: Tags` button and then the `Next: Review` button.
 6. Click the `Create user` button. You might see a warning that the user has no
 permissions at the moment. Just ignore it, we will fix it soon.
-7. Click the `Download .csv` button. Note that this is the last time these
+7. Click the `Download .csv` button. Notice that this is the last time these
 credentials will be available to download, so make sure to store them somewhere.
 Rename the file to `serverless.csv` so that we can refer to it later on.
 
@@ -37,7 +37,7 @@ aws_access_key_id=<AWS_ACCESS_KEY_ID>
 aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
 ```
 
-**Note.** Throughout this document everything between a pair of angle brackets
+**NOTE.** Throughout this document everything between a pair of angle brackets
 `<...>` (including the brackets themselves!) is considered a placeholder for
 your actual credentials. So please pay attention to this fact and be careful of
 simply copying and pasting without filling any gaps.
@@ -52,22 +52,22 @@ region=<REGION>
 output=json
 ```
 
-**Note.** The profile name in the AWS `config` file must include the `"profile"`
+**NOTE.** The profile name in the AWS `config` file must include the `"profile"`
 prefix but still match the profile name in the AWS `credentials` file. Compare:
 `[profile serverless]` vs `[serverless]`.
 
-**Note.** Your AWS region should be geographically as close to your CTR region
+**NOTE.** Your AWS region should be geographically as close to your CTR region
 as possible to reduce latency as much as possible.
 
 Finally, you have to specify which AWS profile to use for deploying your Zappa
 application by defining the `profile_name` setting in the
 [Zappa Settings](../zappa_settings.json).
 
-**Note.** In the [Zappa Settings](../zappa_settings.json) the value of the
+**NOTE.** In the [Zappa Settings](../zappa_settings.json) the value of the
 `profile_name` setting must correspond to the profile name in the AWS
 `credentials` file. Compare: `"profile_name": "serverless"` vs `[serverless]`.
 
-**Note.** In the [Zappa Settings](../zappa_settings.json) the value of the
+**NOTE.** In the [Zappa Settings](../zappa_settings.json) the value of the
 `aws_region` setting must correspond to the region name for the `serverless`
 profile in the AWS `config` file.
 
@@ -86,7 +86,7 @@ things. Basically, it is just a JSON document in a special format that AWS can
 understand and work with. You are encouraged to check the document's contents
 before we move on.
 
-**Note.** Make sure to replace `<ACCOUNT_ID>` by the actual ID of your AWS
+**NOTE.** Make sure to replace `<ACCOUNT_ID>` by the actual ID of your AWS
 account. An AWS account ID is a 12-digit number, such as 123456789012, and there
 are several places in the `AWS Management Console` where it can be found. E.g,
 you may go to the [Support Center](https://console.aws.amazon.com/support/home)
@@ -111,7 +111,7 @@ After:
 ...
 ```
 
-**Note.** You might have noticed the lines like `"arn:aws:s3:::zappa-*"` or
+**NOTE.** You might have noticed the lines like `"arn:aws:s3:::zappa-*"` or
 `"arn:aws:s3:::zappa-*/*"`. What Zappa does under the hood when deploying an
 application is that it automatically packages up the application and its local
 virtual environment into a Lambda-compatible archive, uploads the archive to S3
@@ -161,7 +161,7 @@ look for a custom IAM role named `tr-serverless-relay-ZappaLambdaExecutionRole`.
 The role will be automatically attached to your Lambda by Zappa. Moreover, once
 you have created the role, you will be able to re-use it for any future Lambdas.
 
-**Note.** After having properly configured your `serverless` user, Zappa must
+**NOTE.** After having properly configured your `serverless` user, Zappa must
 be able to attach such roles (i.e. with the `-ZappaLambdaExecutionRole` suffix)
 to any of your Lambdas on behalf of `serverless`. Again, you may check the
 [Deployment Policy](ZappaLambdaDeploymentPolicy.json) one more time to figure
@@ -181,7 +181,8 @@ through the following steps:
 1. Go to the `Identity and Access Management (IAM)` console.
 2. Select the `Policies` tab under the `Access management` drop-down list.
 3. Click the `Create policy` button.
-4. Select the `JSON` tab. Copy and paste the JSON contents of the policy file.
+4. Select the `JSON` tab. Copy and paste the JSON contents of the
+[Execution Policy](ZappaLambdaExecutionPolicy.json).
 5. Click the `Review policy` button.
 6. Give your policy the name `ZappaLambdaExecutionPolicy` and click
 the `Create policy` button.

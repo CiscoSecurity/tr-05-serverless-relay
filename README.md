@@ -5,7 +5,7 @@
 A generic Relay template not bound to any real third-party Threat Intelligence
 service provider.
 
-**Note.** The template aims to show the general structure for future
+**NOTE.** The template aims to show the general structure for future
 implementations. It also provides a couple of utility functions that might be
 handy. Keep in mind that the main idea here is to just give a hint of a
 possible approach rather than enforcing to do everything exactly the same way.
@@ -16,10 +16,9 @@ easily packaged and deployed as an AWS Lambda Function using
 
 ## Rationale
 
-1. We need an application that will translate API requests from Threat Response
-to the third-party integration, and vice versa. This application is provided
-here in the GitHub repository, and we are going to install it in AWS Lambda
-using Zappa.
+1. We need an application that will translate API requests from CTR to the
+third-party integration, and vice versa. This application is provided here in
+the GitHub repository, and we are going to install it in AWS Lambda using Zappa.
 
 2. AWS Lambda allows us to deploy our application without deploying a dedicated
 server or paying for so called "idle" cycles. AWS handles instantiation and
@@ -57,10 +56,10 @@ somewhere) a 256-bit (i.e. 64-character) string a.k.a. the secret key.
 Once a secret key has been generated and used for encoding your third-party
 credentials into a JWT token, the token has to be provided on each request to
 the application as the `Authorization: Bearer <JWT>` header (this will be
-automatically done for you if you create a corresponding module in Threat
-Response). Unless the signature verification fails, the application will decode
-the token to restore your original third-party credentials and will try to
-authenticate to the corresponding third-party service on your behalf.
+automatically done for you if you create a corresponding module in CTR). Unless
+the signature verification fails, the application will decode the token to
+restore your original third-party credentials and will try to authenticate to
+the corresponding third-party service on your behalf.
 
 Probably, the easiest way to generate your JWT token is to use the interactive
 Debugger located on [JWT.IO](https://jwt.io/). You just have to go through the
@@ -88,8 +87,16 @@ example of how it may look like:
 ```
 
 3. In the Verify Signature section of the Decoded pane replace the
-`your-256-bit-secret` placeholder with your generated secret key.
+`your-256-bit-secret` placeholder with your actual secret key.
 
 4. Your JWT token must already be in the Encoded pane. It is ready to use!
+
+Do not worry, the tool does not record your data, everything is done on the
+client side.
+
+Make sure to save both the secret key and the token so that we can refer to
+them later on. Let us name those as `SECRET_KEY` and `JWT` respectively.
+
+## Installation
 
 TBD...
