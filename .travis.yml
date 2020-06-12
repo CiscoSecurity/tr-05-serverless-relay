@@ -7,4 +7,4 @@ install:
 - pip install -U -r test-requirements.txt
 script:
 - flake8 .
-- pytest -v tests/unit/
+- coverage run --source api/ -m pytest --verbose tests/unit/ && coverage report

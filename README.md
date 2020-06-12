@@ -124,7 +124,7 @@ system. Here are the steps to follow:
 
 3. Upgrade PIP (optional):
 
-   `python -m pip install --upgrade pip`
+   `pip install --upgrade pip`
 
 **NOTE**. The virtual environment has to be created only once, you just have
 to make sure to activate it each time you are working on or playing with the
@@ -136,7 +136,7 @@ Finally, install the libraries required for the application to function from
 the [requirements.txt](requirements.txt) file:
 
 ```
-python -m pip install --upgrade --requirement requirements.txt
+pip install --upgrade --requirement requirements.txt
 ```
 
 ## Deployment
@@ -145,7 +145,7 @@ Besides the application's requirements, you also have to install a couple of
 extra tools from the [deploy-requirements.txt](deploy-requirements.txt) file
 for actually deploying the application:
 ```
-python -m pip install --upgrade --requirement deploy-requirements.txt --upgrade-strategy eager
+pip install --upgrade --requirement deploy-requirements.txt --upgrade-strategy eager
 ```
 
 To `deploy` your application to AWS as a Lambda function for the first time,
@@ -162,8 +162,7 @@ make sure to replace `dev` with the name of your stage.
 check the [AWS ERRORS](aws/ERRORS.md) for the troubleshooting of some most
 common types of errors.
 
-You can always check the `status` of your deployment with the corresponding
-command:
+You can check the `status` of your deployment with the corresponding command:
 ```
 zappa status dev
 ```
@@ -173,6 +172,12 @@ environment variable introduced in the [JWT](#JWT) section. This is important
 since the Lambda has to know the `SECRET_KEY` so that it can verify and decode
 the `JWT` from incoming requests. Check the [AWS ENVVARS](aws/ENVVARS.md)
 dedicated to passing environment variables to Lambdas.
+
+Also, do not forget to save the public `URL` to your Lambda returned by Zappa.
+It will look like this:
+```
+https://<RANDOM_ID>.execute-api.<AWS_REGION>.amazonaws.com/<STAGE>
+```
 
 Notice that you have to `deploy` your Lambda only once. Each time you make
 changes to the source code or to the settings file you just have to `update`
@@ -187,4 +192,33 @@ with the `tail` command:
 zappa tail dev --http
 ```
 
+If you do not need your Lambda anymore you can run the following command to
+get rid of it altogether and clean up the underlying resources:
+```
+zappa undeploy dev
+``` 
+
+**NOTE**. The `deploy` command always returns a brand new `URL`. The `update`
+command does not change the current `URL`. The `undeploy` command destroys the
+old `URL` forever.
+
 TBD...
+
+## Testing (optional)
+
+If you want to test the application you have to install some additional
+dependencies from the [test-requirements.txt](test-requirements.txt) file:
+```
+pip install --upgrade --requirement test-requirements.txt
+```
+
+You can perform two kinds of testing:
+
+- Run static code analysis checking for any semantic discrepancies and
+[PEP 8](https://www.python.org/dev/peps/pep-0008/) compliance:
+
+  `flake8 .`
+
+- Run the suite of unit tests and measure the code coverage:
+
+  `coverage run --source api/ -m pytest --verbose tests/unit/ && coverage report`
