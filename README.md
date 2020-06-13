@@ -78,7 +78,7 @@ Header section of the Decoded pane looks like this:
 
 2. Make sure your third-party credentials has already been converted to JSON.
 Copy and paste them into the Payload section of the Decoded pane. Notice that
-the actual format of your payload is integration-specific so it has to be
+the actual structure of your payload is integration-specific so it has to be
 explicitly documented for each particular third-party integration. Here is an
 example of how it may look like:
 ```json
@@ -156,7 +156,7 @@ zappa deploy dev
 
 **NOTE**. Here `dev` is just the name of the default stage. You may define as
 many stages as you like. Each Zappa command requires a stage to be specified so
-make sure to replace `dev` with the name of your stage.
+make sure to replace `dev` with the name of your custom stage when necessary.
 
 **NOTE**. If you are experiencing any problems with running the command then
 check the [AWS ERRORS](aws/ERRORS.md) for the troubleshooting of some most
@@ -176,7 +176,7 @@ dedicated to passing environment variables to Lambdas.
 Also, do not forget to save the public `URL` to your Lambda returned by Zappa.
 It will look like this:
 ```
-https://<RANDOM_ID>.execute-api.<AWS_REGION>.amazonaws.com/<STAGE>
+https://<RANDOM_ID>.execute-api.<AWS_REGION>.amazonaws.com/<ZAPPA_STAGE>
 ```
 
 Notice that you have to `deploy` your Lambda only once. Each time you make
@@ -222,3 +222,34 @@ You can perform two kinds of testing:
 - Run the suite of unit tests and measure the code coverage:
 
   `coverage run --source api/ -m pytest --verbose tests/unit/ && coverage report`
+
+## Implementation Details
+
+Unlike the previous sections that are common for all applications, this one is
+completely integration-specific.
+
+**NOTE.** Remember that this application is just a template so here `N/A` means
+that it has no implemented Relay endpoints and supported types of observables.
+
+### Implemented Relay Endpoints
+
+`N/A`
+
+Any other Relay endpoints return empty responses.
+
+### Supported Types of Observables
+
+`N/A`
+
+Any other types of observables are ignored.
+
+### JWT Payload Structure
+
+```json
+{}
+```
+
+**NOTE.** This particular implementation does not make any requests to external
+services, it only verifies that your `JWT` has been signed with your
+`SECRET_KEY`. Thus, no real credentials are necessary, and you may use any JSON
+payload.

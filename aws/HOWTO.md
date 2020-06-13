@@ -59,7 +59,8 @@ prefix but still match the profile name in the AWS `credentials` file. Compare:
 
 **NOTE.** Your AWS region should be geographically as close to your Threat
 Response region as possible to reduce latency as much as possible. The
-recommended AWS regions are: `us-east-1`, `eu-west-1`, `ap-northeast-1`.
+recommended AWS regions are: `us-east-1` (North America), `eu-west-1` (Europe),
+`ap-northeast-1` (Asia).
 
 Finally, you have to specify which AWS profile to use for deploying your Zappa
 application by defining the `profile_name` setting in the

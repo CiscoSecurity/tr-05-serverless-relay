@@ -8,8 +8,8 @@
     "authorization-header": "Bearer ${JWT}",
     "supported-apis": [
       "health",
-      "observe/observables",
       "deliberate/observables",
+      "observe/observables",
       "refer/observables",
       "respond/observables",
       "respond/trigger"
