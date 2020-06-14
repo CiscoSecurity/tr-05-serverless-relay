@@ -2,13 +2,14 @@
 
 # Relay Template
 
-A generic Relay template not bound to any real third-party Threat Intelligence
+Generic Relay template not bound to any real third-party Threat Intelligence
 service provider.
 
 **NOTE.** The template aims to show the general structure for future
 implementations. It also provides a couple of utility functions that might be
-handy. Keep in mind that the main idea here is to just give a hint of a
-possible approach rather than enforcing to do everything exactly the same way.
+handy. Keep in mind that the main idea here is to just give you a hint of a
+possible approach rather than enforcing you to do everything exactly the same
+way.
 
 The Relay itself is just a simple application written in Python that can be
 easily packaged and deployed as an AWS Lambda Function using
@@ -159,8 +160,8 @@ many stages as you like. Each Zappa command requires a stage to be specified so
 make sure to replace `dev` with the name of your custom stage when necessary.
 
 **NOTE**. If you are experiencing any problems with running the command then
-check the [AWS ERRORS](aws/ERRORS.md) for the troubleshooting of some most
-common types of errors.
+check the [AWS Common Errors](aws/CommonErrors.md) guide on troubleshooting
+of some most common types of errors.
 
 You can check the `status` of your deployment with the corresponding command:
 ```
@@ -170,8 +171,9 @@ zappa status dev
 Once the Lambda has been deployed, make sure to set the `SECRET_KEY`
 environment variable introduced in the [JWT](#JWT) section. This is important
 since the Lambda has to know the `SECRET_KEY` so that it can verify and decode
-the `JWT` from incoming requests. Check the [AWS ENVVARS](aws/ENVVARS.md)
-dedicated to passing environment variables to Lambdas.
+the `JWT` from incoming requests. Check the
+[AWS Environment Variables](aws/EnvironmentVariables.md) guide on passing
+arbitrary environment variables to Lambdas.
 
 Also, do not forget to save the public `URL` to your Lambda returned by Zappa.
 It will look like this:
@@ -225,25 +227,20 @@ You can perform two kinds of testing:
 
 ## Implementation Details
 
-Unlike the previous sections that are common for all applications, this one is
-completely integration-specific.
-
 **NOTE.** Remember that this application is just a template so here `N/A` means
 that it has no implemented Relay endpoints and supported types of observables.
+That will not the case for real integrations with third-party services so you
+may consider the next sections as some placeholders.
 
 ### Implemented Relay Endpoints
 
 `N/A`
 
-Any other Relay endpoints return empty responses.
-
 ### Supported Types of Observables
 
 `N/A`
 
-Any other types of observables are ignored.
-
-### JWT Payload Structure
+### [JWT](#JWT) Payload Structure
 
 ```json
 {}
@@ -252,4 +249,4 @@ Any other types of observables are ignored.
 **NOTE.** This particular implementation does not make any requests to external
 services, it only verifies that your `JWT` has been signed with your
 `SECRET_KEY`. Thus, no real credentials are necessary, and you may use any JSON
-payload.
+payload for encoding.
