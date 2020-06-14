@@ -165,7 +165,7 @@ The role will be automatically attached to your Lambda by Zappa. Moreover, once
 you have created the role, you will be able to re-use it for any future Lambdas.
 
 **NOTE.** After having properly configured your `serverless` user, Zappa must
-be able to attach such roles (i.e. with the `-ZappaLambdaExecutionRole` suffix)
+be able to attach such roles (i.e. with the `ZappaLambdaExecutionRole` suffix)
 to any of your Lambdas on behalf of `serverless`. Again, you may check the
 [Deployment Policy](ZappaLambdaDeploymentPolicy.json) one more time to figure
 out where that permission comes from. Hint: remember the line where you must
