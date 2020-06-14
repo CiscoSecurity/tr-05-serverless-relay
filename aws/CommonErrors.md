@@ -1,9 +1,9 @@
 # AWS Common Errors
 
 **NOTE.** If you are reading this document then most probably you have missed
-some steps and/or notes from the [AWS HOWTO](HOWTO.md). So this document itself
-just lists some most common types of errors and repeats the same instructions
-one more time.
+some steps/notes from the [AWS HOWTO](HOWTO.md)/[README](../README.md). So this
+document itself just lists some most common types of errors and repeats the
+same instructions one more time.
 
 ## AWS Credentials Not Found
 
@@ -72,8 +72,8 @@ Example:
 
   `"s3_bucket": "tr-template-relay-auk8ah9o15"`
 
-**NOTE.** Here is a simple code snippet in Python that generates random
-alphanumeric 10-character suffixes and might be helpful:
+**NOTE.** Here is a simple code snippet in Python that might be helpful for
+generating random alphanumeric 10-character suffixes:
 ```python
 import random
 import string
@@ -100,3 +100,24 @@ To fix the problem, follow the instructions from the
 section and create a role (based on the [Execution Policy](ZappaLambdaExecutionPolicy.json))
 with the name that matches the value of the `role_name` setting in the
 [Zappa Settings](../zappa_settings.json).
+
+## Requirements Not Installed
+
+### Error
+
+`Error: Warning! Status check on the deployed lambda failed. A GET request to
+'/' yielded a 502 response code.`
+
+### Solution
+
+To fix the problem, install the application's requirements and `update` the
+Lambda:
+```
+pip install --upgrade --requirement requirements.txt && zappa update dev
+```
+
+If that does not help then try to `undeploy` the Lambda altogether and `deploy`
+it from scratch again:
+```
+zappa undeploy dev && zappa deploy dev
+```

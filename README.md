@@ -229,8 +229,8 @@ You can perform two kinds of testing:
 
 **NOTE.** Remember that this application is just a template so here `N/A` means
 that it has no implemented Relay endpoints and supported types of observables.
-That will not the case for real integrations with third-party services so you
-may consider the next sections as some placeholders.
+That will not be the case for real integrations with third-party services so
+you may consider the next sections as some placeholders.
 
 ### Implemented Relay Endpoints
 
