@@ -1,0 +1,9 @@
+{
+  "name": "Template",
+  "jwt": {},
+  "region": {
+    "us": "d2a01780-f722-4948-a82b-545a3627ecce",
+    "eu": null,
+    "apjc": null
+  }
+}
