@@ -32,75 +32,14 @@ AWS as a Lambda function. It abstracts a large amount of manual configuration
 and requires only a very simple configuration file, which we have provided and
 will explain how to customize it during this process.
 
-## Preparation
+## Step 0: AWS Setup
 
-To get started, you have to configure your AWS environment and encode your
-third-party credentials into a JWT using a generated secret key.
+To get started, you have to set up your AWS environment first by carefully
+following the instructions from the [AWS HOWTO](aws/HOWTO.md). In addition, the
+document also covers how to configure the [Zappa Settings](zappa_settings.json)
+by explaining the relationships between the values there and your AWS setup.
 
-### AWS
-
-Check the [AWS HOWTO](aws/HOWTO.md) for more details on how to properly set up
-your AWS environment first. Make sure to thoroughly carry out any instructions
-from that document. In addition, it also covers how to configure the
-[Zappa Settings](zappa_settings.json) by explaining the relationships between
-the values there and your AWS setup.
-
-### JWT
-
-In brief, [JSON Web Token (JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token)
-is a way of encoding any JSON data into a signed token. The signature ensures
-the integrity of the data, i.e. the fact that it has not been changed in any
-way in transit between the sender and the recipient.
-
-The JWT standard supports many different algorithms for signing tokens but we
-are interested in HS256. The algorithm requires to generate (and securely store
-somewhere) a 256-bit (i.e. 64-character) string a.k.a. the secret key.
-
-Once a secret key has been generated and used for encoding your third-party
-credentials into a JWT, the token has to be provided on each request to the
-application as the `Authorization: Bearer <JWT>` header (this will be
-automatically done for you if you create a corresponding module in Threat
-Response). Unless the signature verification fails, the application will decode
-the token to restore your original third-party credentials and will try to
-authenticate to the corresponding third-party service on your behalf.
-
-Probably, the easiest way to generate your JWT is to use the interactive
-Debugger located on [JWT.IO](https://jwt.io/). You just have to go through the
-following steps:
-
-1. Select the HS256 algorithm from the drop-down list and make sure that the
-Header section of the Decoded pane looks like this:
-```json
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
-```
-
-2. Make sure your third-party credentials has already been converted to JSON.
-Copy and paste them into the Payload section of the Decoded pane. Notice that
-the actual structure of your payload is integration-specific so it has to be
-explicitly documented for each particular third-party integration. Here is an
-example of how it may look like:
-```json
-{
-  "username": "gdavoian",
-  "password": "4everYoung!"
-}
-```
-
-3. In the Verify Signature section of the Decoded pane replace the
-`your-256-bit-secret` placeholder with your actual secret key.
-
-4. Your JWT must already be in the Encoded pane. It is ready to use!
-
-Do not worry, the tool does not record your data, everything is done on the
-client side.
-
-Make sure to save both the secret key and the token so that we can refer to
-them later on. Let us name those as `SECRET_KEY` and `JWT` respectively.
-
-## Installation
+## Step 1: Requirements Installation
 
 First of all, make sure that you already have Python 3 installed by typing
 ```
@@ -140,14 +79,9 @@ the [requirements.txt](requirements.txt) file:
 pip install --upgrade --requirement requirements.txt
 ```
 
-## Deployment
+## Step 2: Application Deployment
 
-Besides the application's requirements, you also have to install a couple of
-extra tools from the [deploy-requirements.txt](deploy-requirements.txt) file
-for actually deploying the application:
-```
-pip install --upgrade --requirement deploy-requirements.txt --upgrade-strategy eager
-```
+### AWS Lambda Function
 
 To `deploy` your application to AWS as a Lambda function for the first time,
 run the following command:
@@ -163,22 +97,15 @@ make sure to replace `dev` with the name of your custom stage when necessary.
 check the [AWS Common Errors](aws/CommonErrors.md) guide on troubleshooting
 of some most common types of errors.
 
+Once the Lambda has been deployed, make sure to save the public `URL` to your
+Lambda returned by Zappa. It will look like this:
+```
+https://<RANDOM_ID>.execute-api.<AWS_REGION>.amazonaws.com/<STAGE>
+```
+
 You can check the `status` of your deployment with the corresponding command:
 ```
 zappa status dev
-```
-
-Once the Lambda has been deployed, make sure to set the `SECRET_KEY`
-environment variable introduced in the [JWT](#JWT) section. This is important
-since the Lambda has to know the `SECRET_KEY` so that it can verify and decode
-the `JWT` from incoming requests. Check the
-[AWS Environment Variables](aws/EnvironmentVariables.md) guide on passing
-arbitrary environment variables to Lambdas.
-
-Also, do not forget to save the public `URL` to your Lambda returned by Zappa.
-It will look like this:
-```
-https://<RANDOM_ID>.execute-api.<AWS_REGION>.amazonaws.com/<ZAPPA_STAGE>
 ```
 
 Notice that you have to `deploy` your Lambda only once. Each time you make
@@ -204,11 +131,38 @@ zappa undeploy dev
 command does not change the current `URL`. The `undeploy` command destroys the
 old `URL` forever.
 
+### JWT
+
+Before you can start using the live Lambda, you have to encode your third-party
+credentials into a JWT using a generated secret key.
+
+In brief, [JSON Web Token (JWT)](https://en.wikipedia.org/wiki/JSON_Web_Token)
+is a way of encoding any JSON data into a signed token. The signature ensures
+the integrity of the data, i.e. the fact that it has not been changed in any
+way in transit between the sender and the recipient.
+
+The JWT standard supports many different algorithms for signing tokens but we
+are interested in HS256. The algorithm requires to generate (and securely store
+somewhere) a 256-bit (i.e. 64-character) string a.k.a. the secret key.
+
+Once a secret key has been generated and used for encoding your third-party
+credentials into a JWT, the token has to be provided on each request to the
+application as the `Authorization: Bearer <JWT>` header (this will be
+automatically done for you if you create a corresponding module in Threat
+Response). Unless the signature verification fails, the application will decode
+the token to restore your original third-party credentials and will try to
+authenticate to the corresponding third-party service on your behalf.
+
+We recommend taking a look at [JWT.IO](https://jwt.io/), it is a good resource
+for learning how JWTs work.
+
+### Threat Response Module
+
 TBD...
 
-## Testing (optional)
+## Step 3: Testing (Optional)
 
-If you want to test the application you have to install some additional
+If you want to test the application you have to install a couple of extra
 dependencies from the [test-requirements.txt](test-requirements.txt) file:
 ```
 pip install --upgrade --requirement test-requirements.txt
@@ -225,6 +179,10 @@ You can perform two kinds of testing:
 
   `coverage run --source api/ -m pytest --verbose tests/unit/ && coverage report`
 
+If you want to test the live Lambda you may use any HTTP client (e.g. Postman),
+just make sure to send requests to your Lambda's `URL` with the `Authorization`
+header set to `Bearer <JWT>`.
+
 ## Implementation Details
 
 **NOTE.** Remember that this application is just a template so here `N/A` means
@@ -240,7 +198,7 @@ you may consider the next sections as some placeholders.
 
 `N/A`
 
-### [JWT](#JWT) Payload Structure
+### JWT Payload Structure
 
 ```json
 {}

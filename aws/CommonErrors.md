@@ -98,7 +98,7 @@ tr-serverless-relay-ZappaLambdaExecutionRole cannot be found.`
 To fix the problem, follow the instructions from the
 [Custom AWS IAM Roles and Policies for Execution](HOWTO.md#custom-aws-iam-roles-and-policies-for-execution)
 section and create a role (based on the [Execution Policy](ZappaLambdaExecutionPolicy.json))
-with the name that matches the value of the `role_name` setting in the
+with the name corresponding to the value of the `role_name` setting in the
 [Zappa Settings](../zappa_settings.json).
 
 ## Requirements Not Installed

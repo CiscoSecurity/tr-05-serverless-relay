@@ -1,2 +1,0 @@
-zappa==0.51.0
-git+ssh://git@github.com/threatgrid/tr-lambda-relay.git  # latest
