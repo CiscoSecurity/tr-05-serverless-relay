@@ -145,7 +145,7 @@ The JWT standard supports many different algorithms for signing tokens but we
 are interested in HS256. The algorithm requires to generate (and securely store
 somewhere) a 256-bit (i.e. 64-character) string a.k.a. the secret key.
 
-Once a secret key has been generated and used for encoding your third-party
+Once the secret key has been generated and used for encoding your third-party
 credentials into a JWT, the token has to be provided on each request to the
 application as the `Authorization: Bearer <JWT>` header (this will be
 automatically done for you if you create a corresponding module in Threat
@@ -161,7 +161,7 @@ for learning how JWTs work.
 Now, the only things left to do are:
 
 - Generate a secret key and encode your credentials into a token. Let us name
-those as `SECRET_KEY` and `JWT` respectively so that we can refer to it later
+those `SECRET_KEY` and `JWT` respectively so that we can refer to them later
 on.
 
 - Set the `SECRET_KEY` environment variable for your Lambda using the
@@ -183,7 +183,7 @@ It will prompt you to enter your third-party credentials according to the `jwt`
 structure defined in the [Module Settings](module_settings.json).
 
 3. The script will generate a `SECRET_KEY`/`JWT` pair for you based on your
-just entered credentials. Make sure to save the both.
+just entered credentials. Make sure to save both.
 
 4. The script will also build the link to the AWS Console page with your
 Lambda's environment variables. Go set the `SECRET_KEY` environment variable
@@ -232,7 +232,7 @@ header set to `Bearer <JWT>`.
 **NOTE.** Remember that this application is just a template so here `N/A` means
 that it has no implemented Relay endpoints and supported types of observables.
 That will not be the case for real integrations with third-party services so
-you may consider the next sections as some placeholders.
+you may consider the following sections as some placeholders.
 
 ### Implemented Relay Endpoints
 
