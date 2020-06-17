@@ -158,7 +158,7 @@ for learning how JWTs work.
 
 ### Threat Response Module
 
-As for now, the only things still left to do are:
+Now, the only things left to do are:
 
 - Generate a secret key and encode your credentials into a token. Let us name
 those as `SECRET_KEY` and `JWT` respectively so that we can refer to it later
