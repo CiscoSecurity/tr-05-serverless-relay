@@ -2,8 +2,8 @@
 
 # Relay Template
 
-Generic Relay template not bound to any real third-party Threat Intelligence
-service provider.
+Generic Relay template not bound to any real third-party Cyber Threat
+Intelligence service provider.
 
 **NOTE.** The template aims to show the general structure for future
 implementations. It also provides a couple of utility functions that might be
@@ -125,7 +125,7 @@ If you do not need your Lambda anymore you can run the following command to
 get rid of it altogether and clean up the underlying resources:
 ```
 zappa undeploy dev
-``` 
+```
 
 **NOTE**. The `deploy` command always returns a brand new `URL`. The `update`
 command does not change the current `URL`. The `undeploy` command destroys the
