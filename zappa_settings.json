@@ -1,7 +1,7 @@
 {
     "dev": {
         "app_function": "app.app",
-        "aws_region": "eu-central-1",
+        "aws_region": "us-east-1",
         "exclude": [".*", "*.json", "*.md", "*.txt"],
         "keep_warm": false,
         "log_level": "INFO",

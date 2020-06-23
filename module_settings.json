@@ -1,0 +1,9 @@
+{
+  "name": "Template",
+  "jwt": {},
+  "region": {
+    "us": null,
+    "eu": null,
+    "apjc": null
+  }
+}

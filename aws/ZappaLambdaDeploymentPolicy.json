@@ -11,7 +11,7 @@
                 "iam:PutRolePolicy"
             ],
             "Resource": [
-                "arn:aws:iam::<ACCOUNT_ID>:role/*-ZappaLambdaExecutionRole"
+                "arn:aws:iam::<ACCOUNT_ID>:role/*ZappaLambdaExecutionRole"
             ]
         },
         {
