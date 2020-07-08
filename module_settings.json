@@ -1,9 +1,9 @@
 {
-  "name": "Template",
+  "name": "Generic Serverless Relay",
   "jwt": {},
   "region": {
-    "us": null,
-    "eu": null,
-    "apjc": null
+    "us": "86aad484-6344-42df-922d-916b9947ec47",
+    "eu": "a80c5f4a-74cc-4f4a-8934-571bee72acb5",
+    "apjc": "bab9277c-221f-49f9-a56e-b62641ae348a"
   }
 }
