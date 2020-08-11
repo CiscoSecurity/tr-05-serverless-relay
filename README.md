@@ -172,8 +172,8 @@ corresponding value from the previous step.
 To simplify the JWT-related stuff, we have prepared for you the
 [Threat Response JWT Generator](https://github.com/CiscoSecurity/tr-05-jwt-generator)
 tool that provides only a single easy-to-use `jwt` command. Since the tool is
-included to the [requirements.txt](requirements.txt) file, at this point it
-must already have been installed along with the other dependencies.
+included into the [requirements.txt](requirements.txt) file, at this point it
+should already have been installed along with the other dependencies.
 
 Follow the steps below to finish the deployment procedure:
 
