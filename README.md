@@ -170,22 +170,21 @@ corresponding value from the previous step.
 - Create a corresponding Threat Response module based on your Lambda.
 
 To simplify the JWT-related stuff, we have prepared for you the
-[JWT Generator](https://github.com/CiscoSecurity/tr-05-jwt-generator) script.
+[Threat Response JWT Generator](https://github.com/CiscoSecurity/tr-05-jwt-generator)
+tool that provides only a single easy-to-use `jwt` command. Since the tool is
+included into the [requirements.txt](requirements.txt) file, at this point it
+should already have been installed along with the other dependencies.
 
 Follow the steps below to finish the deployment procedure:
 
-1. Copy the script from its repository into the applications's root directory
-(i.e. the same directory where the document you are currently reading is
-located in).
-
-2. Run the script specifying a Zappa stage, e.g. `python jwt_generator.py dev`.
+1. Run the `jwt` command of the tool specifying a Zappa stage, e.g. `jwt dev`.
 It will prompt you to enter your third-party credentials according to the `jwt`
 structure defined in the [Module Settings](module_settings.json).
 
-3. The script will generate a `SECRET_KEY`/`JWT` pair for you based on your
+2. The command will generate a `SECRET_KEY`/`JWT` pair for you based on your
 just entered credentials. Make sure to save both.
 
-4. The script will also build the link to the AWS Console page with your
+3. The command will also build the link to the AWS Console page with your
 Lambda's environment variables. Go set the `SECRET_KEY` environment variable
 there. This is important since the Lambda has to know the `SECRET_KEY` so that
 it can verify and decode the `JWT` from incoming requests. If you do not
@@ -193,14 +192,11 @@ understand how to set the `SECRET_KEY` environment variable then check the
 [AWS Environment Variables](aws/EnvironmentVariables.md) guide on passing
 arbitrary environment variables to Lambdas.
 
-5. The script will also build the links to the Threat Response pages (in all
+4. The command will also build the links to the Threat Response pages (in all
 available regions) with the corresponding module creation forms. Select the
 link corresponding to your Threat Response region. The form there will require
 you to enter both your Lambda's `URL` and your `JWT` (along with a unique name)
 to finally create your Threat Response module.
-
-6. Remove the script from the applications's root directory. It will not be
-needed anymore.
 
 That is it! Your Serverless Relay is ready to use! Congratulations!
 
