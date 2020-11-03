@@ -1,11 +1,11 @@
 from flask import Flask, jsonify
 
 from api.enrich import enrich_api
-from api.errors import TRFormattedError
 from api.health import health_api
 from api.respond import respond_api
-from api.utils import jsonify_data
 from api.version import version_api
+from api.errors import TRFormattedError
+from api.utils import jsonify_data
 
 app = Flask(__name__)
 
@@ -21,7 +21,6 @@ app.register_blueprint(version_api)
 @app.errorhandler(Exception)
 def handle_error(exception):
     app.logger.error(exception)
-
     code = getattr(exception, 'code', 500)
     message = getattr(exception, 'description', 'Something went wrong.')
     reason = '.'.join([
