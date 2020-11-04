@@ -14,11 +14,6 @@ def route(request):
     return request.param
 
 
-def test_health_call_with_invalid_jwt_failure(route, client, invalid_jwt):
-    response = client.post(route, headers=headers(invalid_jwt))
-    assert response.status_code == HTTPStatus.FORBIDDEN
-
-
 def test_health_call_success(route, client, valid_jwt):
     response = client.post(route, headers=headers(valid_jwt))
     assert response.status_code == HTTPStatus.OK

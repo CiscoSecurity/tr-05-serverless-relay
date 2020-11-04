@@ -2,7 +2,11 @@ from http import HTTPStatus
 
 from pytest import fixture
 
+from api.schemas import OBSERVABLE_TYPE_CHOICES
 from .utils import headers
+
+
+allowed_fields = ", ".join(map(repr, OBSERVABLE_TYPE_CHOICES))
 
 
 def routes():
@@ -15,30 +19,101 @@ def route(request):
     return request.param
 
 
-def test_respond_call_with_invalid_jwt_failure(route, client, invalid_jwt):
-    response = client.post(route, headers=headers(invalid_jwt))
-    assert response.status_code == HTTPStatus.FORBIDDEN
+@fixture()
+def invalid_json_value():
+    return [{'type': 'ip', 'value': ''}]
 
 
-@fixture(scope='module')
-def invalid_json(route):
-    if route.endswith('/observables'):
-        return [{'type': 'unknown', 'value': ''}]
-
-    if route.endswith('/trigger'):
-        return {'action_id': 'invalid_action_id',
-                'observable_type': 'unknown',
-                'observable_value': None}
+@fixture()
+def invalid_json_type():
+    return [{'type': 'unknown', 'value': 'value'}]
 
 
-def test_respond_call_with_valid_jwt_but_invalid_json_failure(route,
-                                                              client,
-                                                              valid_jwt,
-                                                              invalid_json):
+@fixture()
+def invalid_json_action_id():
+    return {'action_id': 'some_action_id',
+            'observable_type': 'domain',
+            'observable_value': 'cisco.com'}
+
+
+@fixture()
+def invalid_json_observable_type():
+    return {'action-id': 'some_action_id',
+            'observable_type': 'unknown',
+            'observable_value': 'cisco.com'}
+
+
+@fixture()
+def invalid_json_observable_value():
+    return {'action-id': 'some_action_id',
+            'observable_type': 'ip',
+            'observable_value': ''}
+
+
+def test_respond_call_with_valid_jwt_but_invalid_json_value(
+        client, valid_jwt, invalid_json_value,
+        invalid_json_expected_payload, route='/respond/observables'
+):
     response = client.post(route,
                            headers=headers(valid_jwt),
-                           json=invalid_json)
-    assert response.status_code == HTTPStatus.BAD_REQUEST
+                           json=invalid_json_value)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == invalid_json_expected_payload(
+        "{0: {'value': ['Field may not be blank.']}}"
+    )
+
+
+def test_respond_call_with_valid_jwt_but_invalid_json_type(
+        client, valid_jwt, invalid_json_type,
+        invalid_json_expected_payload, route='/respond/observables'
+):
+    response = client.post(route,
+                           headers=headers(valid_jwt),
+                           json=invalid_json_type)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == invalid_json_expected_payload(
+        '{0: {\'type\': ["Must be one of: ' + allowed_fields + '."]}}'
+    )
+
+
+def test_respond_call_with_valid_jwt_but_invalid_json_action_id(
+        client, valid_jwt, invalid_json_action_id,
+        invalid_json_expected_payload, route='/respond/trigger'
+):
+    response = client.post(route,
+                           headers=headers(valid_jwt),
+                           json=invalid_json_action_id)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == invalid_json_expected_payload(
+        "{'action-id': ['Missing data for required field.']}"
+    )
+
+
+def test_respond_call_with_valid_jwt_but_invalid_json_observable_type(
+        client, valid_jwt, invalid_json_observable_type,
+        invalid_json_expected_payload, route='/respond/trigger'
+):
+    response = client.post(route,
+                           headers=headers(valid_jwt),
+                           json=invalid_json_observable_type)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == invalid_json_expected_payload(
+        '{\'observable_type\': '
+        '["Must be one of: ' + allowed_fields + '."]}'
+    )
+
+
+def test_respond_call_with_valid_jwt_but_invalid_json_observable_value(
+        client, valid_jwt, invalid_json_observable_value,
+        invalid_json_expected_payload, route='/respond/trigger'
+):
+    response = client.post(route,
+                           headers=headers(valid_jwt),
+                           json=invalid_json_observable_value)
+    assert response.status_code == HTTPStatus.OK
+    assert response.json == invalid_json_expected_payload(
+        "{'observable_value': ['Field may not be blank.']}"
+    )
 
 
 @fixture(scope='module')

@@ -4,6 +4,7 @@ from authlib.jose import jwt
 from pytest import fixture
 
 from app import app
+from api.errors import INVALID_ARGUMENT
 
 
 @fixture(scope='session')
@@ -26,30 +27,22 @@ def client(secret_key):
 def valid_jwt(client):
     header = {'alg': 'HS256'}
 
-    payload = {'username': 'gdavoian', 'superuser': False}
+    payload = {'key': 'some_key'}
 
     secret_key = client.application.secret_key
 
     return jwt.encode(header, payload, secret_key).decode('ascii')
 
 
-@fixture(scope='session')
-def invalid_jwt(valid_jwt):
-    header, payload, signature = valid_jwt.split('.')
+@fixture(scope='module')
+def invalid_json_expected_payload():
+    def _make_message(message):
+        return {
+            'data': {
+                'code': INVALID_ARGUMENT,
+                'message': message,
+                'type': 'fatal'
+            }
+        }
 
-    def jwt_decode(s: str) -> dict:
-        from authlib.common.encoding import urlsafe_b64decode, json_loads
-        return json_loads(urlsafe_b64decode(s.encode('ascii')))
-
-    def jwt_encode(d: dict) -> str:
-        from authlib.common.encoding import json_dumps, urlsafe_b64encode
-        return urlsafe_b64encode(json_dumps(d).encode('ascii')).decode('ascii')
-
-    payload = jwt_decode(payload)
-
-    # Corrupt the valid JWT by tampering with its payload.
-    payload['superuser'] = True
-
-    payload = jwt_encode(payload)
-
-    return '.'.join([header, payload, signature])
+    return _make_message
