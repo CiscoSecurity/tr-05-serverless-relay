@@ -4,6 +4,7 @@ from authlib.jose import jwt
 from pytest import fixture
 
 from app import app
+from api.errors import INVALID_ARGUMENT
 
 
 @fixture(scope='session')
@@ -26,8 +27,22 @@ def client(secret_key):
 def valid_jwt(client):
     header = {'alg': 'HS256'}
 
-    payload = {'username': 'gdavoian', 'superuser': False}
+    payload = {'key': 'some_key'}
 
     secret_key = client.application.secret_key
 
     return jwt.encode(header, payload, secret_key).decode('ascii')
+
+
+@fixture(scope='module')
+def invalid_json_expected_payload():
+    def _make_message(message):
+        return {
+            'data': {
+                'code': INVALID_ARGUMENT,
+                'message': message,
+                'type': 'fatal'
+            }
+        }
+
+    return _make_message

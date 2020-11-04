@@ -1,5 +1,6 @@
-UNKNOWN = 'unknown'
 AUTH_ERROR = 'authorization error'
+INVALID_ARGUMENT = 'invalid argument'
+UNKNOWN = 'unknown'
 
 
 class TRFormattedError(Exception):
@@ -21,4 +22,12 @@ class AuthorizationError(TRFormattedError):
         super().__init__(
             AUTH_ERROR,
             f'Authorization failed: {message}'
+        )
+
+
+class InvalidArgumentError(TRFormattedError):
+    def __init__(self, message):
+        super().__init__(
+            INVALID_ARGUMENT,
+            str(message)
         )

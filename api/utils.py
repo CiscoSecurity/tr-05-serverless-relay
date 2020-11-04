@@ -1,12 +1,11 @@
 from authlib.jose import jwt
 from authlib.jose.errors import DecodeError, BadSignatureError
 from flask import request, current_app, jsonify
-from werkzeug.exceptions import BadRequest
 
-from api.errors import AuthorizationError
+from api.errors import AuthorizationError, InvalidArgumentError
 
 
-def gre_auth_token():
+def get_auth_token():
     """
     Parse and validate incoming request Authorization header.
 
@@ -42,7 +41,7 @@ def get_jwt():
         BadSignatureError: 'Failed to decode JWT with provided key',
         DecodeError: 'Wrong JWT structure'
     }
-    token = gre_auth_token()
+    token = get_auth_token()
     try:
         return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
     except tuple(expected_errors) as error:
@@ -64,7 +63,7 @@ def get_json(schema):
     message = schema.validate(data)
 
     if message:
-        raise BadRequest(message)
+        raise InvalidArgumentError(message)
 
     return data
 
