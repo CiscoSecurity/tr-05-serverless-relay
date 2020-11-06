@@ -15,8 +15,6 @@ def validate_string(value, *, choices=None):
 
 
 OBSERVABLE_TYPE_CHOICES = (
-    's1_agent_id',
-    'ms_machine_id',
     'amp_computer_guid',
     'certificate_common_name',
     'certificate_issuer',
@@ -36,6 +34,7 @@ OBSERVABLE_TYPE_CHOICES = (
     'ipv6',
     'mac_address',
     'md5',
+    'ms_machine_id',
     'mutex',
     'ngfw_id',
     'ngfw_name',
@@ -47,6 +46,7 @@ OBSERVABLE_TYPE_CHOICES = (
     'registry_key',
     'registry_name',
     'registry_path',
+    's1_agent_id',
     'sha1',
     'sha256',
     'url',
