@@ -15,6 +15,8 @@ def validate_string(value, *, choices=None):
 
 
 OBSERVABLE_TYPE_CHOICES = (
+    's1_agent_id',
+    'ms_machine_id',
     'amp_computer_guid',
     'certificate_common_name',
     'certificate_issuer',
