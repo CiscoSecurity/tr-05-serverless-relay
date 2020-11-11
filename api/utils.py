@@ -70,3 +70,7 @@ def get_json(schema):
 
 def jsonify_data(data):
     return jsonify({'data': data})
+
+
+def jsonify_errors(data):
+    return jsonify({'errors': [data]})
