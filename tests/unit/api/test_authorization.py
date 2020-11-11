@@ -63,10 +63,10 @@ def invalid_jwt(valid_jwt):
 def authorization_errors_expected_payload(route):
     def _make_payload_message(message):
         payload = {
-            'errors': {
+            'errors': [{
                 'code': AUTH_ERROR,
                 'message': f'Authorization failed: {message}',
-                'type': 'fatal'}
+                'type': 'fatal'}]
 
         }
         return payload
