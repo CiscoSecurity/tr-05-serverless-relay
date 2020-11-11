@@ -38,7 +38,7 @@ def valid_jwt(client):
 def invalid_json_expected_payload():
     def _make_message(message):
         return {
-            'data': {
+            'error': {
                 'code': INVALID_ARGUMENT,
                 'message': message,
                 'type': 'fatal'
