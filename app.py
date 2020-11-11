@@ -5,7 +5,7 @@ from api.health import health_api
 from api.respond import respond_api
 from api.version import version_api
 from api.errors import TRFormattedError
-from api.utils import jsonify_error
+from api.utils import jsonify_errors
 
 app = Flask(__name__)
 
@@ -35,7 +35,7 @@ def handle_error(exception):
 @app.errorhandler(TRFormattedError)
 def handle_tr_formatted_error(exception):
     app.logger.error(exception)
-    return jsonify_error(exception.json)
+    return jsonify_errors(exception.json)
 
 
 if __name__ == '__main__':
