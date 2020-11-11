@@ -73,4 +73,4 @@ def jsonify_data(data):
 
 
 def jsonify_error(data):
-    return jsonify({'error': data})
+    return jsonify({'errors': data})
