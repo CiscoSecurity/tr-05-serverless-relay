@@ -60,5 +60,6 @@ def valid_json():
 
 
 def test_enrich_call_success(route, client, valid_jwt, valid_json):
-    response = client.post(route, headers=get_headers(valid_jwt), json=valid_json)
+    response = client.post(route, headers=get_headers(valid_jwt),
+                           json=valid_json)
     assert response.status_code == HTTPStatus.OK
