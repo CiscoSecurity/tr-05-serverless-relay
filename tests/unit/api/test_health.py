@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from pytest import fixture
 
-from .utils import headers
+from .utils import get_headers
 
 
 def routes():
@@ -15,5 +15,5 @@ def route(request):
 
 
 def test_health_call_success(route, client, valid_jwt):
-    response = client.post(route, headers=headers(valid_jwt))
+    response = client.post(route, headers=get_headers(valid_jwt))
     assert response.status_code == HTTPStatus.OK

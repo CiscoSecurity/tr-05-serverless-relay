@@ -53,6 +53,13 @@ OBSERVABLE_TYPE_CHOICES = (
     'user',
     'user_agent',
 )
+PERIODS_CHOICES = (
+    "last_24_hours",
+    "last_7_days",
+    "last_30_days",
+    "last_60_days",
+    "last_90_days"
+)
 
 
 class ObservableSchema(Schema):
@@ -83,3 +90,10 @@ class ActionFormParamsSchema(Schema):
 
     class Meta:
         unknown = INCLUDE
+
+
+class DashboardPeriodSchema(Schema):
+    period = fields.String(
+        data_key='period',
+        validate=partial(validate_string, choices=PERIODS_CHOICES)
+    )

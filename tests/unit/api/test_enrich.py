@@ -3,7 +3,7 @@ from http import HTTPStatus
 from pytest import fixture
 
 from api.schemas import OBSERVABLE_TYPE_CHOICES
-from .utils import headers
+from .utils import get_headers
 
 
 def routes():
@@ -32,7 +32,7 @@ def test_enrich_call_with_valid_jwt_but_invalid_json_value(
         invalid_json_expected_payload
 ):
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_value)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -46,7 +46,7 @@ def test_enrich_call_with_valid_jwt_but_invalid_json_type(
 ):
     allowed_fields = ", ".join(map(repr, OBSERVABLE_TYPE_CHOICES))
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_type)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -60,5 +60,5 @@ def valid_json():
 
 
 def test_enrich_call_success(route, client, valid_jwt, valid_json):
-    response = client.post(route, headers=headers(valid_jwt), json=valid_json)
+    response = client.post(route, headers=get_headers(valid_jwt), json=valid_json)
     assert response.status_code == HTTPStatus.OK
