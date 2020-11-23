@@ -7,7 +7,6 @@ from api.utils import get_json, get_jwt, jsonify_data
 
 enrich_api = Blueprint('enrich', __name__)
 
-
 get_observables = partial(get_json, schema=ObservableSchema(many=True))
 
 

@@ -3,7 +3,6 @@ from flask import Blueprint
 from api.schemas import DashboardTileSchema, DashboardTileDataSchema
 from api.utils import jsonify_data, get_jwt, get_json
 
-
 dashboard_api = Blueprint('dashboard', __name__)
 
 
