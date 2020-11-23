@@ -68,24 +68,6 @@ def get_json(schema):
     return data
 
 
-def get_params(schema):
-    """
-    Parse the incoming request's params.
-    Validate it against the specified schema.
-
-    NOTE. This function is just an example of how one can read and check
-    anything before passing to an API endpoint, and thus it may be modified in
-    any way, replaced by another function, or even removed from the module.
-    """
-    data = dict(request.args)
-    message = schema.validate(data)
-
-    if message:
-        raise InvalidArgumentError(message)
-
-    return data
-
-
 def jsonify_data(data):
     return jsonify({'data': data})
 

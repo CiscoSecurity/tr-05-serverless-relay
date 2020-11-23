@@ -1,38 +1,62 @@
+from collections import namedtuple
 from http import HTTPStatus
 
 from pytest import fixture
 
-from api.schemas import PERIODS_CHOICES
 from api.errors import INVALID_ARGUMENT
 from .utils import get_headers
 
-
-allowed_periods = ", ".join(map(repr, PERIODS_CHOICES))
-
-
-def routes():
-    yield '/dashboard/tiles'
-    yield '/dashboard/tiles/module_instants_id/tile_id'
-    yield '/dashboard/tiles/module_instants_id/tile_id/data'
+WrongCall = namedtuple('WrongCall', ('endpoint', 'payload', 'message'))
 
 
-@fixture(scope='module', params=routes(), ids=lambda route: f'GET {route}')
-def route(request):
+def wrong_calls():
+    yield WrongCall(
+        '/tiles/tile',
+        {'tile_id': 'some_value'},
+        "{'tile-id': ['Missing data for required field.'], "
+        "'tile_id': ['Unknown field.']}"
+    )
+    yield WrongCall(
+        '/tiles/tile',
+        {'tile-id': ''},
+        "{'tile-id': ['Field may not be blank.']}"
+    )
+    yield WrongCall(
+        '/tiles/tile-data',
+        {'tile_id': 'some_value', 'period': 'some_period'},
+        "{'tile-id': ['Missing data for required field.'], "
+        "'tile_id': ['Unknown field.']}"
+    )
+    yield WrongCall(
+        '/tiles/tile-data',
+        {'tile-id': '', 'period': 'some_period'},
+        "{'tile-id': ['Field may not be blank.']}"
+    )
+    yield WrongCall(
+        '/tiles/tile-data',
+        {'tile-id': 'some_value', 'not_period': 'some_period'},
+        "{'period': ['Missing data for required field.'], "
+        "'not_period': ['Unknown field.']}"
+    )
+    yield WrongCall(
+        '/tiles/tile-data',
+        {'tile-id': 'some_value', 'period': ''},
+        "{'period': ['Field may not be blank.']}"
+    )
+
+
+@fixture(
+    scope='module',
+    params=wrong_calls(),
+    ids=lambda wrong_payload: f'{wrong_payload.endpoint}, '
+                              f'{wrong_payload.payload}'
+)
+def wrong_call(request):
     return request.param
 
 
-@fixture()
-def invalid_params_data():
-    return {'period': 'invalid_data'}
-
-
-@fixture()
-def invalid_params_name():
-    return {'invalid_name': 'last_7_days'}
-
-
 @fixture(scope='module')
-def invalid_params_expected_payload():
+def invalid_argument_expected_payload():
     def _make_message(message):
         return {
             'errors': [{
@@ -45,37 +69,30 @@ def invalid_params_expected_payload():
     return _make_message
 
 
-def test_dashboard_call_with_invalid_params_data(
-        client, valid_jwt, invalid_params_data,
-        invalid_params_expected_payload,
-        route='/dashboard/tiles/module_instants_id/tile_id/data'
-
-):
-    response = client.get(route, headers=get_headers(valid_jwt),
-                          query_string=invalid_params_data)
-
+def test_dashboard_call_with_wrong_payload(wrong_call, client, valid_jwt,
+                                           invalid_argument_expected_payload):
+    response = client.post(
+        path=wrong_call.endpoint,
+        headers=get_headers(valid_jwt),
+        json=wrong_call.payload
+    )
     assert response.status_code == HTTPStatus.OK
-    assert response.json == invalid_params_expected_payload(
-        '{\'period\': '
-        '["Must be one of: ' + allowed_periods + '."]}'
+    assert response.json == invalid_argument_expected_payload(
+        wrong_call.message
     )
 
 
-def test_dashboard_call_with_invalid_params_name(
-        client, valid_jwt, invalid_params_name,
-        invalid_params_expected_payload,
-        route='/dashboard/tiles/module_instants_id/tile_id/data'
+def routes():
+    yield '/tiles'
+    yield '/tiles/tile'
+    yield '/tiles/tile-data'
 
-):
-    response = client.get(route, headers=get_headers(valid_jwt),
-                          query_string=invalid_params_name)
 
-    assert response.status_code == HTTPStatus.OK
-    assert response.json == invalid_params_expected_payload(
-        "{'invalid_name': ['Unknown field.']}"
-    )
+@fixture(scope='module', params=routes(), ids=lambda route: f'POST {route}')
+def route(request):
+    return request.param
 
 
 def test_dashboard_call_success(route, client, valid_jwt):
-    response = client.get(route, headers=get_headers(valid_jwt))
+    response = client.post(route, headers=get_headers(valid_jwt))
     assert response.status_code == HTTPStatus.OK

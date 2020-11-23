@@ -20,11 +20,9 @@ def calls():
     yield Call('GET', '/refer/observables', HTTPStatus.METHOD_NOT_ALLOWED)
     yield Call('GET', '/respond/observables', HTTPStatus.METHOD_NOT_ALLOWED)
     yield Call('GET', '/respond/trigger', HTTPStatus.METHOD_NOT_ALLOWED)
-    yield Call('POST', '/dashboard/tiles', HTTPStatus.METHOD_NOT_ALLOWED)
-    yield Call('POST', '/dashboard/tiles/module_instants_id/tile_id',
-               HTTPStatus.METHOD_NOT_ALLOWED)
-    yield Call('POST', '/dashboard/tiles/module_instants_id/tile_id/data',
-               HTTPStatus.METHOD_NOT_ALLOWED)
+    yield Call('GET', '/tiles', HTTPStatus.METHOD_NOT_ALLOWED)
+    yield Call('GET', '/tiles/tile', HTTPStatus.METHOD_NOT_ALLOWED)
+    yield Call('GET', '/tiles/tile-data', HTTPStatus.METHOD_NOT_ALLOWED)
 
 
 @fixture(scope='module',

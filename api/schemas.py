@@ -53,13 +53,6 @@ OBSERVABLE_TYPE_CHOICES = (
     'user',
     'user_agent',
 )
-PERIODS_CHOICES = (
-    "last_24_hours",
-    "last_7_days",
-    "last_30_days",
-    "last_60_days",
-    "last_90_days"
-)
 
 
 class ObservableSchema(Schema):
@@ -92,8 +85,22 @@ class ActionFormParamsSchema(Schema):
         unknown = INCLUDE
 
 
-class DashboardPeriodSchema(Schema):
+class DashboardTileSchema(Schema):
+    tile_id = fields.String(
+        data_key='tile-id',
+        validate=validate_string,
+        required=True
+    )
+
+
+class DashboardTileDataSchema(Schema):
     period = fields.String(
         data_key='period',
-        validate=partial(validate_string, choices=PERIODS_CHOICES)
+        validate=validate_string,
+        required=True
+    )
+    tile_id = fields.String(
+        data_key='tile-id',
+        validate=validate_string,
+        required=True
     )

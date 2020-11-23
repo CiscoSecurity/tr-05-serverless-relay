@@ -1,28 +1,27 @@
 from flask import Blueprint
 
-from api.schemas import DashboardPeriodSchema
-from api.utils import jsonify_data, get_jwt, get_params
+from api.schemas import DashboardTileSchema, DashboardTileDataSchema
+from api.utils import jsonify_data, get_jwt, get_json
 
 
 dashboard_api = Blueprint('dashboard', __name__)
 
 
-@dashboard_api.route('/dashboard/tiles', methods=['GET'])
+@dashboard_api.route('/tiles', methods=['POST'])
 def tiles():
     _ = get_jwt()
     return jsonify_data([])
 
 
-@dashboard_api.route('/dashboard/tiles/<module_instants_id>/<tile_id>',
-                     methods=['GET'])
-def tile(module_instants_id, tile_id):
+@dashboard_api.route('/tiles/tile', methods=['POST'])
+def tile():
     _ = get_jwt()
+    _ = get_json(DashboardTileSchema())
     return jsonify_data({})
 
 
-@dashboard_api.route('/dashboard/tiles/<module_instants_id>/<tile_id>/data',
-                     methods=['GET'])
-def tile_data(module_instants_id, tile_id):
+@dashboard_api.route('/tiles/tile-data', methods=['POST'])
+def tile_data():
     _ = get_jwt()
-    _ = get_params(DashboardPeriodSchema())
+    _ = get_json(DashboardTileDataSchema())
     return jsonify_data({})
