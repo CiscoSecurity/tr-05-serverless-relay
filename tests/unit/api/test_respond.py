@@ -3,7 +3,7 @@ from http import HTTPStatus
 from pytest import fixture
 
 from api.schemas import OBSERVABLE_TYPE_CHOICES
-from .utils import headers
+from .utils import get_headers
 
 
 allowed_fields = ", ".join(map(repr, OBSERVABLE_TYPE_CHOICES))
@@ -55,7 +55,7 @@ def test_respond_call_with_valid_jwt_but_invalid_json_value(
         invalid_json_expected_payload, route='/respond/observables'
 ):
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_value)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -68,7 +68,7 @@ def test_respond_call_with_valid_jwt_but_invalid_json_type(
         invalid_json_expected_payload, route='/respond/observables'
 ):
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_type)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -81,7 +81,7 @@ def test_respond_call_with_valid_jwt_but_invalid_json_action_id(
         invalid_json_expected_payload, route='/respond/trigger'
 ):
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_action_id)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -94,7 +94,7 @@ def test_respond_call_with_valid_jwt_but_invalid_json_observable_type(
         invalid_json_expected_payload, route='/respond/trigger'
 ):
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_observable_type)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -108,7 +108,7 @@ def test_respond_call_with_valid_jwt_but_invalid_json_observable_value(
         invalid_json_expected_payload, route='/respond/trigger'
 ):
     response = client.post(route,
-                           headers=headers(valid_jwt),
+                           headers=get_headers(valid_jwt),
                            json=invalid_json_observable_value)
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -128,5 +128,6 @@ def valid_json(route):
 
 
 def test_respond_call_success(route, client, valid_jwt, valid_json):
-    response = client.post(route, headers=headers(valid_jwt), json=valid_json)
+    response = client.post(route, headers=get_headers(valid_jwt),
+                           json=valid_json)
     assert response.status_code == HTTPStatus.OK

@@ -83,3 +83,24 @@ class ActionFormParamsSchema(Schema):
 
     class Meta:
         unknown = INCLUDE
+
+
+class DashboardTileSchema(Schema):
+    tile_id = fields.String(
+        data_key='tile-id',
+        validate=validate_string,
+        required=True
+    )
+
+
+class DashboardTileDataSchema(Schema):
+    period = fields.String(
+        data_key='period',
+        validate=validate_string,
+        required=True
+    )
+    tile_id = fields.String(
+        data_key='tile-id',
+        validate=validate_string,
+        required=True
+    )

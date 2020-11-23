@@ -7,7 +7,6 @@ from api.utils import get_json, get_jwt, jsonify_data
 
 respond_api = Blueprint('respond', __name__)
 
-
 get_observables = partial(get_json, schema=ObservableSchema(many=True))
 get_action_form_params = partial(get_json, schema=ActionFormParamsSchema())
 

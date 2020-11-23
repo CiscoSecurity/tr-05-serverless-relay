@@ -1,6 +1,5 @@
 from flask import Blueprint, jsonify, current_app
 
-
 version_api = Blueprint('version', __name__)
 
 

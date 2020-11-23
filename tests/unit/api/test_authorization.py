@@ -3,7 +3,7 @@ from http import HTTPStatus
 from authlib.jose import jwt
 from pytest import fixture
 
-from .utils import headers
+from .utils import get_headers
 from api.errors import AUTH_ERROR
 
 
@@ -91,7 +91,7 @@ def test_call_with_wrong_authorization_type(
         authorization_errors_expected_payload
 ):
     response = client.post(
-        route, headers=headers(valid_jwt, auth_type='wrong_type')
+        route, headers=get_headers(valid_jwt, auth_type='wrong_type')
     )
 
     assert response.status_code == HTTPStatus.OK
@@ -104,7 +104,7 @@ def test_call_with_wrong_jwt_structure(
         route, client, wrong_jwt_structure,
         authorization_errors_expected_payload
 ):
-    response = client.post(route, headers=headers(wrong_jwt_structure))
+    response = client.post(route, headers=get_headers(wrong_jwt_structure))
 
     assert response.status_code == HTTPStatus.OK
     assert response.json == authorization_errors_expected_payload(
@@ -116,7 +116,7 @@ def test_call_with_jwt_encoded_by_wrong_key(
         route, client, invalid_jwt,
         authorization_errors_expected_payload
 ):
-    response = client.post(route, headers=headers(invalid_jwt))
+    response = client.post(route, headers=get_headers(invalid_jwt))
 
     assert response.status_code == HTTPStatus.OK
     assert response.json == authorization_errors_expected_payload(
@@ -129,7 +129,7 @@ def test_call_with_wrong_jwt_payload_structure(
         authorization_errors_expected_payload
 ):
     response = client.post(route,
-                           headers=headers(wrong_payload_structure_jwt))
+                           headers=get_headers(wrong_payload_structure_jwt))
 
     assert response.status_code == HTTPStatus.OK
     assert response.json == authorization_errors_expected_payload(
@@ -143,7 +143,7 @@ def test_call_with_missed_secret_key(
 ):
     right_secret_key = client.application.secret_key
     client.application.secret_key = None
-    response = client.post(route, headers=headers(valid_jwt))
+    response = client.post(route, headers=get_headers(valid_jwt))
     client.application.secret_key = right_secret_key
 
     assert response.status_code == HTTPStatus.OK
