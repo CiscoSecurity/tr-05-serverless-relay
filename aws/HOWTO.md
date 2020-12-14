@@ -57,7 +57,7 @@ output=json
 prefix but still match the profile name in the AWS `credentials` file. Compare:
 `[profile serverless]` vs `[serverless]`.
 
-**NOTE.** Your AWS region should be geographically as close to your Threat
+**NOTE.** Your AWS region should be geographically as close to your SecureX Threat
 Response region as possible to reduce latency as much as possible. The
 recommended AWS regions are:
 - `us-east-1` (for [North America](https://visibility.amp.cisco.com)),

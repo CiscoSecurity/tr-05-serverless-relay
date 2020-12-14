@@ -18,7 +18,7 @@ easily packaged and deployed as an AWS Lambda Function using
 
 ## Rationale
 
-1. We need an application that will translate API requests from Threat Response
+1. We need an application that will translate API requests from SecureX Threat Response
 to the third-party integration, and vice versa. This application is provided
 here in the GitHub repository, and we are going to install it in AWS Lambda
 using Zappa.
@@ -149,7 +149,7 @@ somewhere) a 256-bit (i.e. 64-character) string a.k.a. the secret key.
 Once the secret key has been generated and used for encoding your third-party
 credentials into a JWT, the token has to be provided on each request to the
 application as the `Authorization: Bearer <JWT>` header (this will be
-automatically done for you if you create a corresponding module in Threat
+automatically done for you if you create a corresponding module in SecureX Threat
 Response). Unless the signature verification fails, the application will decode
 the token to restore your original third-party credentials and will try to
 authenticate to the corresponding third-party service on your behalf.
@@ -157,7 +157,7 @@ authenticate to the corresponding third-party service on your behalf.
 We recommend taking a look at [JWT.IO](https://jwt.io/), it is a good resource
 for learning how JWTs work.
 
-### Threat Response Module
+### SecureX Threat Response Module
 
 Now, the only things left to do are:
 
@@ -168,10 +168,10 @@ on.
 - Set the `SECRET_KEY` environment variable for your Lambda using the
 corresponding value from the previous step.
 
-- Create a corresponding Threat Response module based on your Lambda.
+- Create a corresponding SecureX Threat Response module based on your Lambda.
 
 To simplify the JWT-related stuff, we have prepared for you the
-[Threat Response JWT Generator](https://github.com/CiscoSecurity/tr-05-jwt-generator)
+[SecureX Threat Response JWT Generator](https://github.com/CiscoSecurity/tr-05-jwt-generator)
 tool that provides only a single easy-to-use `jwt` command. Since the tool is
 included into the [requirements.txt](requirements.txt) file, at this point it
 should already have been installed along with the other dependencies.
@@ -193,11 +193,11 @@ understand how to set the `SECRET_KEY` environment variable then check the
 [AWS Environment Variables](aws/EnvironmentVariables.md) guide on passing
 arbitrary environment variables to Lambdas.
 
-4. The command will also build the links to the Threat Response pages (in all
+4. The command will also build the links to the SecureX Response pages (in all
 available regions) with the corresponding module creation forms. Select the
-link corresponding to your Threat Response region. The form there will require
+link corresponding to your SecureX Threat Response region. The form there will require
 you to enter both your Lambda's `URL` and your `JWT` (along with a unique name)
-to finally create your Threat Response module.
+to finally create your SecureX Threat Response module.
 
 That is it! Your Serverless Relay is ready to use! Congratulations!
 
