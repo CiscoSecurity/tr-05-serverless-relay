@@ -193,7 +193,7 @@ understand how to set the `SECRET_KEY` environment variable then check the
 [AWS Environment Variables](aws/EnvironmentVariables.md) guide on passing
 arbitrary environment variables to Lambdas.
 
-4. The command will also build the links to the SecureX Response pages (in all
+4. The command will also build the links to the SecureX Threat Response pages (in all
 available regions) with the corresponding module creation forms. Select the
 link corresponding to your SecureX Threat Response region. The form there will require
 you to enter both your Lambda's `URL` and your `JWT` (along with a unique name)
