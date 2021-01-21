@@ -12,35 +12,35 @@ WrongCall = namedtuple('WrongCall', ('endpoint', 'payload', 'message'))
 def wrong_calls():
     yield WrongCall(
         '/tiles/tile',
-        {'tile_id': 'some_value'},
-        "{'tile-id': ['Missing data for required field.'], "
-        "'tile_id': ['Unknown field.']}"
+        {'tile-id': 'some_value'},
+        "{'tile_id': ['Missing data for required field.'], "
+        "'tile-id': ['Unknown field.']}"
     )
     yield WrongCall(
         '/tiles/tile',
-        {'tile-id': ''},
-        "{'tile-id': ['Field may not be blank.']}"
+        {'tile_id': ''},
+        "{'tile_id': ['Field may not be blank.']}"
     )
     yield WrongCall(
         '/tiles/tile-data',
-        {'tile_id': 'some_value', 'period': 'some_period'},
-        "{'tile-id': ['Missing data for required field.'], "
-        "'tile_id': ['Unknown field.']}"
+        {'tile-id': 'some_value', 'period': 'some_period'},
+        "{'tile_id': ['Missing data for required field.'], "
+        "'tile-id': ['Unknown field.']}"
     )
     yield WrongCall(
         '/tiles/tile-data',
-        {'tile-id': '', 'period': 'some_period'},
-        "{'tile-id': ['Field may not be blank.']}"
+        {'tile_id': '', 'period': 'some_period'},
+        "{'tile_id': ['Field may not be blank.']}"
     )
     yield WrongCall(
         '/tiles/tile-data',
-        {'tile-id': 'some_value', 'not_period': 'some_period'},
+        {'tile_id': 'some_value', 'not_period': 'some_period'},
         "{'period': ['Missing data for required field.'], "
         "'not_period': ['Unknown field.']}"
     )
     yield WrongCall(
         '/tiles/tile-data',
-        {'tile-id': 'some_value', 'period': ''},
+        {'tile_id': 'some_value', 'period': ''},
         "{'period': ['Field may not be blank.']}"
     )
 
