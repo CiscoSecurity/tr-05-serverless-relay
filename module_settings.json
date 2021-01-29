@@ -1,9 +1,11 @@
 {
-  "name": "Generic Serverless Relay",
-  "jwt": {},
+  "name": "sevt-investigate-module",
+  "jwt": {
+    "key": "api key"
+  },
   "region": {
-    "us": "86aad484-6344-42df-922d-916b9947ec47",
-    "eu": "a80c5f4a-74cc-4f4a-8934-571bee72acb5",
-    "apjc": "bab9277c-221f-49f9-a56e-b62641ae348a"
+    "us": "f4b2cf01-0447-436e-8dc1-b0b15049888b",
+    "eu": "cdf11c33-0891-491a-8e36-201e4decd3d0",
+    "apjc": "904e961f-ff81-48f5-aeb0-5c033e2054b7"
   }
 }
