@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from flask import Blueprint, current_app, jsonify, g
 import requests
 
+# FUNCTIONS
 
 def group_observables(relay_input):
     # Leave only unique observables ( deduplicate observable )  and select some specific observable type
@@ -93,6 +94,7 @@ enrich_api = Blueprint('enrich', __name__)
 
 get_observables = partial(get_json, schema=ObservableSchema(many=True))
 
+# ROUTES
 
 @enrich_api.route('/deliberate/observables', methods=['POST'])
 def deliberate_observables():
